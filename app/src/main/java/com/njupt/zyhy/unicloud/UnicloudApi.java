@@ -319,6 +319,28 @@ public class UnicloudApi {
 
     }
 
+    /**
+     * 添加文物登记数据
+     * @param tag 接口标记
+     * @param Token 验证码
+     * @param image
+     * @param title
+     * @param user_id
+     * @param address
+     * @return JSON格式结果
+     */
+    public static String Add_Lost(String tag, String Token,String image, String title,String user_id, String address) throws Exception {
+        String Url = URL_data_Add +"tag="+tag+"&token="+Token+"&image="+image+"&title="+title+"&user_id="+user_id+"&address="+address;
+        JSONObject Json = URL_Post(Url);
+        String code = Json.getString("code");
+        if (code != "0"){
+            return Json.getString("inserted");
+        }else {
+            return Json.getString("inserted");
+        }
+
+    }
+
 
 
     /**

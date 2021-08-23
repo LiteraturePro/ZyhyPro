@@ -252,6 +252,12 @@ public class Fragment_Me_lost_add  extends Activity implements View.OnClickListe
                 return;
             }else{
                 //上传意见反馈
+                if (Integer.parseInt(  UnicloudApi.Add_Lost("uni-data-collect",sp.getString("token",""),url,NameValue,sp.getString("id",""),addressValue)) > 0) {
+                    showToast("提交成功!");
+                    finish();
+                } else {
+                    showToast("提交失败！");
+                }
 
             }
         }
