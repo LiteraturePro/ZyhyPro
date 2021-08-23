@@ -6,42 +6,38 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
-import com.njupt.zyhy.bean.InitBmob;
-import com.njupt.zyhy.bean.Order;
-import com.njupt.zyhy.bean.RegisterUser;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import com.njupt.zyhy.bean.AreaCode;
+import com.njupt.zyhy.unicloud.UnicloudApi;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
 
 public class Fragment_Home_canguanyuyue_add extends Activity implements View.OnClickListener,AdapterView.OnItemSelectedListener{
     private static String TipInfo="";// 记录错误信息
     private Spinner sp = null;
     private Button btn_yes;
     private Calendar cal;
-    private EditText etUserName,etPassWord;
+    private EditText etUserName,etIdcard;
     private String etusername,IDStr,zjlx = "身份证",TIME = null;
     private TextView t_time;
     private int year,month,day;
     private SharedPreferences Sp;
+    private RadioGroup time_interval;
 
 
     @Override
@@ -51,7 +47,8 @@ public class Fragment_Home_canguanyuyue_add extends Activity implements View.OnC
         setContentView(R.layout.fragment_home_canguanyuyue_add);
         btn_yes = (Button)findViewById(R.id.btn_yes);
         etUserName =(EditText)findViewById(R.id.et_username);
-        etPassWord =(EditText)findViewById(R.id.et_password);
+        etIdcard =(EditText)findViewById(R.id.et_idcard);
+        time_interval = (RadioGroup) findViewById(R.id.RadioGroup);//获取单选按钮组
         sp = (Spinner)findViewById(R.id.spin);
         Sp = this.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         String[] arr = {"身份证","护照","港澳居民来往内地通行证","台湾居民来往内地通行证"};
@@ -64,19 +61,21 @@ public class Fragment_Home_canguanyuyue_add extends Activity implements View.OnC
         //事件监听
         sp.setOnItemSelectedListener(this);
         btn_yes.setOnClickListener(this::onClick);
-        etPassWord.setOnClickListener(this);
+        etIdcard.setOnClickListener(this);
         etUserName.setOnClickListener(this);
         getDate();
         t_time=(TextView) findViewById(R.id.t_time);
         t_time.setOnClickListener(this);
+        time_interval.setOnClickListener(this);
+
 
 
     }
     private void getDate() {
-        cal=Calendar.getInstance();
-        year=cal.get(Calendar.YEAR);       //获取年月日时分秒
-        month=cal.get(Calendar.MONTH);   //获取到的月份是从0开始计数
-        day=cal.get(Calendar.DAY_OF_MONTH);
+        cal = Calendar.getInstance();
+        year = cal.get(Calendar.YEAR);       //获取年月日时分秒
+        month = cal.get(Calendar.MONTH);   //获取到的月份是从0开始计数
+        day = cal.get(Calendar.DAY_OF_MONTH);
     }
 
 
@@ -101,10 +100,20 @@ public class Fragment_Home_canguanyuyue_add extends Activity implements View.OnC
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_yes:
-                InitBmob.Initbmob();
-                Order order = new Order();
                 etusername = etUserName.getText().toString();
-                IDStr = etPassWord.getText().toString();
+                String time_interval_choose = null;
+
+                //通过for循环遍历单选按钮组
+                for(int i = 0 ; i < time_interval.getChildCount(); i++){
+                    RadioButton RB = (RadioButton) time_interval.getChildAt(i);
+                    if(RB.isChecked())
+                    {
+                        time_interval_choose = RB.getText().toString();
+                        break;
+                    }
+                }
+
+                IDStr = etIdcard.getText().toString();
                 if (TextUtils.isEmpty(etusername) || TextUtils.isEmpty(IDStr) ) {
                     showToast("姓名或身份证不能为空");
                     return;
@@ -120,25 +129,21 @@ public class Fragment_Home_canguanyuyue_add extends Activity implements View.OnC
                 else if (TextUtils.isEmpty(TIME)) {
                     showToast("请选择时间");
                     return;
-                }else{
-
-                    RegisterUser user = BmobUser.getCurrentUser(RegisterUser.class);
-                    order.setId(user.getObjectId());
-                    order.setName(etusername);
-                    order.setNumber(IDStr);
-                    order.setTime(TIME);
-                    order.setCertificates(zjlx);
-                    order.save(new SaveListener<String>() {
-                        @Override
-                        public void done(String s, BmobException e) {
-                            if (e == null) {
-                                showToast("提交成功!");
-                                finish();
-                            } else {
-                                showToast("提交失败！");
-                            }
+                }else if(TextUtils.isEmpty(time_interval_choose)){
+                    showToast("请选择时段");
+                }
+                else{
+                    try {
+                        if (Integer.parseInt( UnicloudApi.Add_Order("uni-data-order",Sp.getString("token",""),Sp.getString("id",""),etusername, TIME, zjlx, IDStr, time_interval_choose)) > 0) {
+                            showToast("提交成功!");
+                            finish();
+                        } else {
+                            showToast("提交失败！");
                         }
-                    });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                 }
                 break;
             case R.id.t_time:
@@ -192,9 +197,8 @@ public class Fragment_Home_canguanyuyue_add extends Activity implements View.OnC
         }
 
 
-
         // 判断地区码是否有效
-        Hashtable areacode = GetAreaCode();
+        Hashtable areacode = AreaCode.GetAreaCode();
         //如果身份证前两位的地区码不在Hashtable，则地区码有误
         if (areacode.get(Ai.substring(0, 2)) == null) {
             TipInfo = "身份证地区编码错误";
@@ -241,45 +245,7 @@ public class Fragment_Home_canguanyuyue_add extends Activity implements View.OnC
         }
         return true;
     }
-    private static Hashtable GetAreaCode() {
-        Hashtable hashtable = new Hashtable();
-        hashtable.put("11", "北京");
-        hashtable.put("12", "天津");
-        hashtable.put("13", "河北");
-        hashtable.put("14", "山西");
-        hashtable.put("15", "内蒙古");
-        hashtable.put("21", "辽宁");
-        hashtable.put("22", "吉林");
-        hashtable.put("23", "黑龙江");
-        hashtable.put("31", "上海");
-        hashtable.put("32", "江苏");
-        hashtable.put("33", "浙江");
-        hashtable.put("34", "安徽");
-        hashtable.put("35", "福建");
-        hashtable.put("36", "江西");
-        hashtable.put("37", "山东");
-        hashtable.put("41", "河南");
-        hashtable.put("42", "湖北");
-        hashtable.put("43", "湖南");
-        hashtable.put("44", "广东");
-        hashtable.put("45", "广西");
-        hashtable.put("46", "海南");
-        hashtable.put("50", "重庆");
-        hashtable.put("51", "四川");
-        hashtable.put("52", "贵州");
-        hashtable.put("53", "云南");
-        hashtable.put("54", "西藏");
-        hashtable.put("61", "陕西");
-        hashtable.put("62", "甘肃");
-        hashtable.put("63", "青海");
-        hashtable.put("64", "宁夏");
-        hashtable.put("65", "新疆");
-        hashtable.put("71", "台湾");
-        hashtable.put("81", "香港");
-        hashtable.put("82", "澳门");
-        hashtable.put("91", "国外");
-        return hashtable;
-    }
+
     public static boolean isDate(String strDate) {
         Pattern pattern = Pattern
                 .compile("^((\\d{2}(([02468][048])|([13579][26]))[\\-\\/\\s]?((((0?[13578])|(1[02]))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(3[01])))|(((0?[469])|(11))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(30)))|(0?2[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])))))|(\\d{2}(([02468][1235679])|([13579][01345789]))[\\-\\/\\s]?((((0?[13578])|(1[02]))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(3[01])))|(((0?[469])|(11))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(30)))|(0?2[\\-\\/\\s]?((0?[1-9])|(1[0-9])|(2[0-8]))))))(\\s(((0?[0-9])|([1-2][0-3]))\\:([0-5]?[0-9])((\\s)|(\\:([0-5]?[0-9])))))?$");

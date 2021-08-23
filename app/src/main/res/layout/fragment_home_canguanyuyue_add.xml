@@ -101,7 +101,7 @@
             android:background="@drawable/layout_yuanjiao_huise">
 
             <EditText
-                android:id="@+id/et_password"
+                android:id="@+id/et_idcard"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"
@@ -119,7 +119,7 @@
         android:text="选择参观日期"
         android:gravity="center_vertical"
         android:textColor="@color/black"
-        android:textSize="20dp"/>
+        android:textSize="15sp"/>
 
     <TextView
         android:id="@+id/t_time"
@@ -129,11 +129,39 @@
         android:textColor="#78201f"
         android:text="点击此处进行选择" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="选择参观时段"
+        android:gravity="center_vertical"
+        android:textColor="@color/black"
+        android:textSize="15sp"/>
+
+    <RadioGroup
+        android:id="@+id/RadioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
+        android:layout_marginEnd="80dp"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/morning"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="上午"/>
+        <RadioButton
+            android:id="@+id/afternoon"
+            android:layout_marginStart="80dp"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="下午"/>
+    </RadioGroup>
+
     <Button
         android:id="@+id/btn_yes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:background="#78201f"
         android:text="确认预约"
         android:textAllCaps="false"

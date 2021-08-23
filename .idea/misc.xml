@@ -3,7 +3,19 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Github/ZyhyPro/app/src/main/res/drawable/confirmdialog_text_LightGrey.xml" value="0.2013888888888889" />
+        <entry key="..\:/Github/ZyhyPro/app/src/main/res/drawable/confirmdialog_text_green.xml" value="0.15138888888888888" />
+        <entry key="..\:/Github/ZyhyPro/app/src/main/res/drawable/confirmdialog_text_lightgrey.xml" value="0.33515981735159817" />
+        <entry key="..\:/Github/ZyhyPro/app/src/main/res/layout/fragment_exhibition_collect.xml" value="0.2572463768115942" />
+        <entry key="..\:/Github/ZyhyPro/app/src/main/res/layout/fragment_home_canguanyuyue_add.xml" value="0.2866847826086957" />
+        <entry key="..\:/Github/ZyhyPro/app/src/main/res/layout/fragment_me_lost.xml" value="0.2572463768115942" />
         <entry key="..\:/Github/ZyhyPro/app/src/main/res/layout/fragment_me_lost_add.xml" value="0.2866847826086957" />
+        <entry key="..\:/Github/ZyhyPro/app/src/main/res/layout/fragment_me_opinion.xml" value="0.2572463768115942" />
+        <entry key="..\:/Github/ZyhyPro/app/src/main/res/layout/fragment_me_order.xml" value="0.10925925925925926" />
+        <entry key="..\:/Github/ZyhyPro/app/src/main/res/layout/item_feed.xml" value="0.5" />
+        <entry key="..\:/Github/ZyhyPro/app/src/main/res/layout/item_lost.xml" value="0.25" />
+        <entry key="..\:/Github/ZyhyPro/app/src/main/res/layout/item_news.xml" value="0.12222222222222222" />
+        <entry key="..\:/Github/ZyhyPro/app/src/main/res/layout/item_order.xml" value="0.5" />
       </map>
     </option>
   </component>

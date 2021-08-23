@@ -8,19 +8,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="100dp">
-            <ImageView
-                android:id="@+id/lost_iamge"
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="5dp"
-                android:layout_width="90dp"
-                android:layout_height="90dp">
-
-            </ImageView>
-
-        </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
@@ -30,7 +17,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="80dp"
                 android:orientation="vertical"
                 android:layout_weight="1"
                 android:padding="8dp">
@@ -41,15 +28,23 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="15sp"
+                        android:textSize="11sp"
                         android:textStyle="bold"
                         android:textColor="#000000"
-                        android:text="物品名称："/>
+                        android:text="信息编号："/>
                     <TextView
-                        android:id="@+id/text_title"
-                        android:textSize="15sp"
+                        android:id="@+id/text_number"
+                        android:textSize="8sp"
                         android:layout_width="wrap_content"
                         android:layout_height="20dp" />
+
+                    <TextView
+                        android:id="@+id/text_time"
+                        android:textSize="10sp"
+                        android:layout_marginStart="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:text="发布时间"/>
 
                 </LinearLayout>
                 <LinearLayout
@@ -59,67 +54,31 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="10sp"
+                        android:textSize="9sp"
                         android:textStyle="bold"
                         android:textColor="#000000"
-                        android:text="领取地址："/>
+                        android:text="反馈内容："/>
 
                     <TextView
                         android:id="@+id/text_text"
                         android:layout_width="match_parent"
-                        android:layout_height="20dp"
-                        android:textSize="10sp"
+                        android:layout_height="35dp"
+                        android:textSize="8sp"
                         android:text="text" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_height="wrap_content"
-
-                    >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="10sp"
-                        android:textColor="#000000"
-                        android:textStyle="bold"
-                        android:text="发布时间："/>
-
-                    <TextView
-                        android:id="@+id/text_date"
-                        android:layout_width="match_parent"
-                        android:layout_height="20dp"
-                        android:textSize="10sp"
-                        android:text="text" />
-
                 </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="60dp"
                 android:orientation="vertical"
-                android:layout_height="100dp">
+                android:layout_marginTop="50dp"
+                android:layout_height="20dp">
                 <LinearLayout
                     android:layout_width="60dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_height="20dp">
-                    <TextView
-                        android:id="@+id/text_user"
-                        android:layout_width="match_parent"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginEnd="5dp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:textStyle="bold"
-                        android:text=""/>
 
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="60dp"
-                    android:layout_marginTop="40dp"
                     android:layout_height="15dp">
                     <TextView
-                        android:id="@+id/text_get"
+                        android:id="@+id/text_adopt"
                         android:layout_width="match_parent"
                         android:layout_marginStart="15dp"
                         android:layout_marginEnd="10dp"
@@ -128,7 +87,7 @@
                         android:textSize="6sp"
                         android:gravity="center"
                         android:textStyle="bold"
-                        android:text="未领取"/>
+                        android:text="未采纳"/>
                 </LinearLayout>
 
             </LinearLayout>

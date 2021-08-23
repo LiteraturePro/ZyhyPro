@@ -6,63 +6,148 @@
     android:background="@drawable/confirmdialog3"
     android:orientation="horizontal">
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="100dp">
-        <ImageView
-            android:id="@+id/order_iamge"
-            android:layout_marginTop="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_width="90dp"
-            android:src="@drawable/orders"
-            android:layout_height="90dp">
-
-        </ImageView>
-
-    </LinearLayout>
-
-    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:orientation="vertical"
-        android:padding="8dp">
+        android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:text="预约单号："/>
-            <TextView
-                android:id="@+id/text_title"
-                android:textSize="15sp"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp" />
+            android:layout_height="100dp">
+            <ImageView
+                android:id="@+id/order_iamge"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_width="50dp"
+                android:src="@drawable/orders"
+                android:layout_height="50dp">
+
+            </ImageView>
 
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:text="预约时间："/>
 
-            <TextView
-                android:id="@+id/text_text"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:textSize="12sp"
-                android:text="text" />
-        </LinearLayout>
+                android:layout_height="100dp"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:padding="8dp">
+                <LinearLayout
+                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="#000000"
+                        android:textStyle="bold"
+                        android:text="预约号："/>
+                    <TextView
+                        android:id="@+id/text_number"
+                        android:textSize="10sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp" />
 
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="10sp"
+                            android:textColor="#000000"
+                            android:textStyle="bold"
+                            android:text="姓名："/>
+
+                        <TextView
+                            android:id="@+id/text_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="20dp"
+                            android:textSize="8sp"
+                            android:text="text" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="60dp"
+                        android:layout_height="wrap_content"
+
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="10sp"
+                            android:textColor="#000000"
+                            android:textStyle="bold"
+                            android:text="时间："/>
+
+                        <TextView
+                            android:id="@+id/text_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="20dp"
+                            android:textSize="8sp"
+                            android:text="text" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_height="wrap_content"
+
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="10sp"
+                        android:textColor="#000000"
+                        android:textStyle="bold"
+                        android:text="证件号："/>
+
+                    <TextView
+                        android:id="@+id/text_idcard"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:textSize="10sp"
+                        android:text="text" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="60dp"
+                android:orientation="vertical"
+                android:layout_height="100dp">
+                <LinearLayout
+                    android:layout_width="60dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_height="15dp">
+                    <TextView
+                        android:id="@+id/text_get"
+                        android:layout_width="match_parent"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/confirmdialog_text_green"
+                        android:textSize="6sp"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:text="未参观"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -82,6 +82,7 @@ public class Fragment_Me_news extends Activity implements View.OnClickListener{
                         @Override
                         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                             if (mSideslipListView.isAllowItemClick()) {
+                                Log.i("TAG", mDataList.get(position) + "被长按了");
                                 return true;//返回true表示本次事件被消耗了，若返回
                             }
                             return false;

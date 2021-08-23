@@ -181,6 +181,7 @@ public class UnicloudApi {
         }
 
     }
+
     /**
      * 获取数据
      * @param Token 验证码
@@ -320,7 +321,7 @@ public class UnicloudApi {
     }
 
     /**
-     * 添加文物登记数据
+     * 添加失误登记数据
      * @param tag 接口标记
      * @param Token 验证码
      * @param image
@@ -341,6 +342,29 @@ public class UnicloudApi {
 
     }
 
+    /**
+     * 添加预约登记数据
+     * @param tag 接口标记
+     * @param Token 验证码
+     * @param name
+     * @param diagTime
+     * @param user_id
+     * @param classs
+     * @param idcard
+     * @param time_interval
+     * @return JSON格式结果
+     */
+    public static String Add_Order(String tag, String Token, String user_id, String name, String diagTime, String classs ,String idcard, String time_interval) throws Exception {
+        String Url = URL_data_Add +"tag="+tag+"&token="+Token+"&id="+user_id+"&name="+name+"&diagTime="+diagTime+"&classs="+classs+"&idcard="+idcard+"&time_interval="+time_interval;
+        JSONObject Json = URL_Post(Url);
+        String code = Json.getString("code");
+        if (code != "0"){
+            return Json.getString("inserted");
+        }else {
+            return Json.getString("inserted");
+        }
+
+    }
 
 
     /**

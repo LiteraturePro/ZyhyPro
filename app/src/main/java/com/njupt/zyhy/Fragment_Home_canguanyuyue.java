@@ -32,11 +32,11 @@ public class Fragment_Home_canguanyuyue extends AppCompatActivity implements Vie
             case R.id.canguanback:
                 finish();
                 break;
-            case R.id.textView47:
+            case R.id.textView49:
                 Intent intent = new Intent(this, Fragment_Me_order.class);
                 startActivity(intent);
                 break;
-            case R.id.textView49:
+            case R.id.textView47:
                 Intent intent1 = new Intent(this, Fragment_Home_canguanyuyue_add.class);
                 startActivity(intent1);
                 break;

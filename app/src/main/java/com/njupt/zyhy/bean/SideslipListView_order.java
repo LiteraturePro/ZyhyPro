@@ -11,7 +11,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-public class SideslipListView_lost extends ListView {
+public class SideslipListView_order extends ListView {
     private static final String TAG = "SideslipListView";
 
     private int mScreenWidth;//屏幕的宽度
@@ -25,17 +25,17 @@ public class SideslipListView_lost extends ListView {
     private int mPointPosition;//手指按下位置所在的item位置
     private boolean isAllowItemClick;//是否允许item点击
 
-    public SideslipListView_lost(Context context) {
+    public SideslipListView_order(Context context) {
         super(context);
         init(context);
     }
 
-    public SideslipListView_lost(Context context, AttributeSet attrs) {
+    public SideslipListView_order(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public SideslipListView_lost(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SideslipListView_order(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }

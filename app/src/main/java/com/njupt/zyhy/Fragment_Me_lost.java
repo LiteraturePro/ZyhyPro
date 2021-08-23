@@ -16,11 +16,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.njupt.zyhy.bean.GetHttpBitmap;
 import com.njupt.zyhy.bean.SideslipListView_lost;
+import com.njupt.zyhy.bmob.restapi.Bmob;
 import com.njupt.zyhy.unicloud.UnicloudApi;
 
 
@@ -80,6 +83,17 @@ public class Fragment_Me_lost extends Activity implements View.OnClickListener{
                             }
                         }
                     });
+                    //设置item长按事件
+                    mSideslipListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                        @Override
+                        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                            if (mSideslipListView.isAllowItemClick()) {
+                                Log.i("TAG", DataJSONArray.getJSONObject(position).getString("title") + "被长按了");
+                                return true;//返回true表示本次事件被消耗了，若返回
+                            }
+                            return false;
+                        }
+                    });
                 }
             }
         };
@@ -136,6 +150,7 @@ public class Fragment_Me_lost extends Activity implements View.OnClickListener{
                 viewHolder.text_date = (TextView) view.findViewById(R.id.text_date);
                 viewHolder.text_user = (TextView) view.findViewById(R.id.text_user);
                 viewHolder.text_get = (TextView) view.findViewById(R.id.text_get);
+                viewHolder.txtv_delete = (TextView) view.findViewById(R.id.txtv_delete);
                 view.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) view.getTag();
@@ -163,13 +178,37 @@ public class Fragment_Me_lost extends Activity implements View.OnClickListener{
                 viewHolder.text_get.setBackgroundResource(R.drawable.confirmdialog_text_green);
             }
 
+            final int pos = position;
+            viewHolder.txtv_delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if(OneDate.getBoolean("been_to")){
+                        Toast.makeText(Fragment_Me_lost.this,  "不能操作",
+                                Toast.LENGTH_SHORT).show();
+
+                    }else{
+                        Toast.makeText(Fragment_Me_lost.this,  "已取消发布",
+                                Toast.LENGTH_SHORT).show();
+                        DataJSONArray.remove(pos);
+                        try {
+                            UnicloudApi.DeleteData(sp.getString("token",""),"uni-data-lost",OneDate.getString("_id"));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        notifyDataSetChanged();
+                        mSideslipListView.turnNormal();
+                    }
+                }
+            });
+
             return view;
         }
     }
 
     class ViewHolder {
         public ImageView lost_image;
-        public TextView text_address, text_title, text_date, text_user, text_get;
+        public TextView text_address, text_title, text_date, text_user, text_get, txtv_delete;
     }
 
     private JSONObject GetData(String Table) throws Exception {
