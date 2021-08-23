@@ -14,15 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.mob.MobSDK;
-import com.njupt.zyhy.bean.InitBmob;
-import com.njupt.zyhy.bmob.bson.BSONObject;
-import com.njupt.zyhy.bmob.restapi.Bmob;
+import com.njupt.zyhy.unicloud.UnicloudApi;
 import java.util.HashMap;
-import java.util.List;
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 
@@ -45,14 +38,8 @@ public class ForgetActivity extends Activity implements View.OnClickListener{
         initView();
         initData();
         initListener();
-
-        // 在Android4.0以后，会发现，只要是写在主线程（就是Activity）中的HTTP请求，运行时都会报错，
-        // 这是因为Android在4.0以后为了防止应用的ANR（Aplication Not Response）异常，
-        // Android这个设计是为了防止网络请求时间过长而导致界面假死的情况发生。
-        if (android.os.Build.VERSION.SDK_INT > 9) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
     }
 
     /*** 定义初始化函数
@@ -64,7 +51,7 @@ public class ForgetActivity extends Activity implements View.OnClickListener{
         et_checkCode = (EditText) findViewById(R.id.et_checkCode);
         accountRegisterPassword = (EditText) findViewById(R.id.i8_accountRegister_password);
         tv_getCheckCode = (TextView) findViewById(R.id.tv_getCheckCode);
-        registerBtn = (Button) findViewById(R.id.i8_accountRegistern_toRegister);
+        registerBtn = (Button) findViewById(R.id.i8_account_toForget);
         registerBackBtn = (TextView) findViewById(R.id.register_back_btn);
 
     }
@@ -195,7 +182,7 @@ public class ForgetActivity extends Activity implements View.OnClickListener{
         }
     }
 
-    /**  bmob更新密码
+    /**  更新密码
      * @version 1.0
      */
     private void UpdateAccount() {
@@ -207,40 +194,14 @@ public class ForgetActivity extends Activity implements View.OnClickListener{
             showToast("注册账号或密码为空");
             return;
         }
-
-        /**BmobUser类为Bmob后端云提供类*/
-        BmobUser bmobUser = new BmobUser();
-        bmobUser.setUsername(registerName);
-        bmobUser.setPassword(registerPassword);
-        BmobQuery<BmobUser> userQuery = new BmobQuery<BmobUser>();//增加查询条件
-        userQuery.addWhereEqualTo("username",registerName);
-        userQuery.findObjects(new FindListener<BmobUser>() {
-            @Override
-            public void done(List<BmobUser> list, BmobException e) {
-                if(e == null) {
-                    for (BmobUser user : list) {
-                        //获得数据的objectId信息
-                        update(user.getObjectId(),registerPassword);
-                        Log.d("id",user.getObjectId());
-                    }
-                }else{
-                    Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
-                }
-            }
-        });
-    }
-    // 直接调用API更新数据库
-    private void update(String ID,String Passwd){
-        InitBmob.Initbmob();
-        String re;
-        BSONObject bson = new BSONObject();
-        bson.put("password", Passwd);
-        re = Bmob.update("_User", ID, bson.toString());
-        showToast("更新成功");
-        Log.d("更新代码",re);
+        try {
+            showToast(UnicloudApi.resetPwd("0", registerName, registerPassword));
+        } catch (Exception e) {
+            e.printStackTrace();
+            showToast("更新失败！");
+        }
 
     }
-
 
     /**
      * @version 1.0

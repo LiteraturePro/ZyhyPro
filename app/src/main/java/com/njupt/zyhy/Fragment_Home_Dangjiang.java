@@ -19,14 +19,14 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.njupt.zyhy.bean.GetHttpBitmap;
 import com.njupt.zyhy.bean.InitBmob;
-import com.njupt.zyhy.bean.SideslipListViews;
+import com.njupt.zyhy.bean.SideslipListView_lost;
 import com.njupt.zyhy.bmob.restapi.Bmob;
 import java.util.ArrayList;
 
 public class Fragment_Home_Dangjiang extends AppCompatActivity implements View.OnClickListener{
     private ImageView back;
 
-    private SideslipListViews mSideslipListView;
+    private SideslipListView_lost mSideslipListView;
     private static final String TAG = "MainActivity";
     private ArrayList<Bitmap> Lost_bit;
     private ArrayList<String> Text_address;
@@ -52,7 +52,7 @@ public class Fragment_Home_Dangjiang extends AppCompatActivity implements View.O
                 if (msg.what == 0x11) {
                     String info = (String) msg.obj;
                     inindate(info);
-                    mSideslipListView = (SideslipListViews) findViewById(R.id.lost_sideslipListView);
+                    mSideslipListView = (SideslipListView_lost) findViewById(R.id.lost_sideslipListView);
 
                     mSideslipListView.setAdapter(new Fragment_Home_Dangjiang.CustomAdapter());//设置适配器
                     //设置item点击事件

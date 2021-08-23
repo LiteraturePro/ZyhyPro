@@ -19,21 +19,20 @@
             android:id="@+id/lost_add_back"
             android:layout_width="20sp"
             android:layout_height="20sp"
-            android:src="@drawable/jiantou"
-            android:adjustViewBounds="true"
-            android:layout_marginTop="6sp"
             android:layout_marginLeft="10sp"
-            />
+            android:layout_marginTop="6sp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/jiantou" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="失物招领"
+            android:layout_marginLeft="150sp"
+            android:layout_marginTop="2sp"
+            android:text="添加物品"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginTop="2sp"
-            android:layout_marginLeft="150sp"/>
+            android:textStyle="bold" />
 
     </RelativeLayout>
     <LinearLayout

@@ -101,10 +101,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize|navigation"
             android:theme="@android:style/Theme.NoTitleBar" />
         <activity
-            android:name=".ARActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize"
-            android:screenOrientation="unspecified" />
-        <activity
             android:name="cn.bmob.v3.update.UpdateDialogActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity

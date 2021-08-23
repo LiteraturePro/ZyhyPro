@@ -1,6 +1,9 @@
 package com.njupt.zyhy.Fragment;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -8,6 +11,9 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +34,8 @@ import com.njupt.zyhy.bean.GetHttpBitmap;
 import com.njupt.zyhy.bean.HistoryBean;
 import com.njupt.zyhy.bean.InitBmob;
 import com.njupt.zyhy.bmob.restapi.Bmob;
+import com.njupt.zyhy.unicloud.UnicloudApi;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,9 +60,11 @@ public class Fragment_Exhibition extends Fragment {
 
     private ArrayList<String> Z_Title,Z_Subtitle,Z_Text,Z_Pic1,Z_Pic2,Z_Pic3,Z_Pic4;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private JSONArray Z_DataJSONArray;
+    private Handler handler;
+    private SharedPreferences sp;
+
+
 
     public Fragment_Exhibition() {
         // Required empty public constructor
@@ -81,10 +91,40 @@ public class Fragment_Exhibition extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
+        sp = getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+
+        //创建handler
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == 0x11) {
+                    JSONObject DataJSONObject = (JSONObject) msg.obj;
+                    Z_DataJSONArray = DataJSONObject.getJSONArray("data");
+                    System.out.println(Z_DataJSONArray.toString());
+
+                }
+            }
+        };
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //FIXME 这里直接更新ui是不行的
+                Message Z_message = Message.obtain();
+                //还有其他更新ui方式,runOnUiThread()等
+                try {
+                    Z_message.obj = GetData("uni-data-exhibit");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Z_message.what = 0x11;
+                handler.sendMessage(Z_message);
+            }
+        }).start();
+
 
 
     }
@@ -166,7 +206,7 @@ public class Fragment_Exhibition extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(HistoryAdapter.ViewHolder holder, int position) {
+        public void onBindViewHolder(HistoryAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
             //得到可用的图片
             bitmap = GetHttpBitmap.getHttpBitmap(historyList.get(position).getPic());
             holder.pic.setImageBitmap(bitmap);
@@ -207,6 +247,10 @@ public class Fragment_Exhibition extends Fragment {
         for (int i= 0; i< Z_Title.size(); i++){
             HistoryBean bean= new HistoryBean(Z_Title.get(i), Z_Pic1.get(i), Z_Subtitle.get(i));
             historyList.add(bean);        }
+    }
+
+    private JSONObject GetData(String Table) throws Exception {
+        return UnicloudApi.GetData(sp.getString("token",""),Table);
     }
 
     private void inindate(){

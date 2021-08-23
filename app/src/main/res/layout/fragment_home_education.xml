@@ -100,7 +100,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
-                    <com.njupt.zyhy.bean.SideslipListViews
+                    <com.njupt.zyhy.bean.SideslipListView_lost
                         android:id="@+id/lost_sideslipListView"
                         android:scrollingCache="false"
                         android:cacheColorHint="#00000000"
@@ -108,7 +108,7 @@
                         android:dividerHeight="3dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-                    </com.njupt.zyhy.bean.SideslipListViews>
+                    </com.njupt.zyhy.bean.SideslipListView_lost>
 
                 </LinearLayout>
 

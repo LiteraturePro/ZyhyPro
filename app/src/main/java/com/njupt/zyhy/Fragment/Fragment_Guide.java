@@ -24,7 +24,6 @@ import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MarkerOptions;
-import com.njupt.zyhy.ARActivity;
 import com.njupt.zyhy.Fragment_guide_webview;
 import com.njupt.zyhy.R;
 import com.njupt.zyhy.Fragment_guide_map;
@@ -140,7 +139,7 @@ public class Fragment_Guide extends Fragment {
                     return;
                 }
                 mLastClickTime = SystemClock.elapsedRealtime();
-                startActivity(new Intent(getActivity(), ARActivity.class));
+//                startActivity(new Intent(getActivity(), ARActivity.class));
             }
         });
     }

@@ -2,7 +2,9 @@ package com.njupt.zyhy;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,14 +25,12 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import com.hb.dialog.myDialog.ActionSheetDialog;
-import com.njupt.zyhy.bean.GetHttpBitmap;
-import com.njupt.zyhy.bean.InitBmob;
-import com.njupt.zyhy.bean.Lostinformation;
+import com.njupt.zyhy.bean.ImageUtil;
+import com.njupt.zyhy.unicloud.UnicloudApi;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
 
 
 public class Fragment_Me_lost_add  extends Activity implements View.OnClickListener{
@@ -45,6 +45,7 @@ public class Fragment_Me_lost_add  extends Activity implements View.OnClickListe
     private Bitmap bitmap_upload;
     private Button lost_put;
     private String TAG = "tag";
+    private SharedPreferences sp;
     //需要的权限数组 读/写/相机
     private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -63,7 +64,11 @@ public class Fragment_Me_lost_add  extends Activity implements View.OnClickListe
                 choose();
                 break;
             case R.id.lost_put:
-                add_lost();
+                try {
+                    add_lost();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             default:
                 break;
         }
@@ -94,6 +99,7 @@ public class Fragment_Me_lost_add  extends Activity implements View.OnClickListe
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
         }
+        sp = this.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
 
     }
 
@@ -225,42 +231,29 @@ public class Fragment_Me_lost_add  extends Activity implements View.OnClickListe
     }
 
 
-    private void add_lost() {
+    private void add_lost() throws Exception {
         String NameValue = Name.getText().toString().trim();
         String addressValue = address.getText().toString().trim();
-        String bit = GetHttpBitmap.bitmaptoString(bitmap_upload,100);
 
-        if(bit.isEmpty()){
+        String url = UnicloudApi.Uploadfile(sp.getString("token",""),ImageUtil.byte2Base64(ImageUtil.bitmap2Byte(bitmap_upload)));
+
+        if(url.isEmpty()){
             showToast("请上传图片");
             return;
         }
-        InitBmob.Initbmob();
 
-        Lostinformation lostinformation = new Lostinformation();
         if (TextUtils.isEmpty(NameValue) || TextUtils.isEmpty(addressValue) ) {
             showToast("反馈内容不能为空!");
             return;
         }
         else{
-            if(bit.isEmpty()){
+            if(url.isEmpty()){
                 showToast("请上传图片");
                 return;
             }else{
-                lostinformation.setTitle(NameValue);
-                lostinformation.setAddress(addressValue);
-                lostinformation.setBit(bit);
-                lostinformation.save(new SaveListener<String>() {
-                @Override
-                public void done(String s, BmobException e) {
-                    if (e == null) {
-                        showToast("提交成功!");
-                        finish();
-                    } else {
-                        showToast("提交失败！");
-                    }
-                }
-            });
-        }
+                //上传意见反馈
+
+            }
         }
     }
     /**

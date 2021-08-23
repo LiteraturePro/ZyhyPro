@@ -13,29 +13,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.mob.MobSDK;
-
-import cn.bmob.v3.datatype.BmobFile;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
-import com.njupt.zyhy.bean.RegisterUser;
+import com.njupt.zyhy.unicloud.UnicloudApi;
 import java.util.HashMap;
-
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
 
 public class RegisterActivity extends Activity implements View.OnClickListener {
 
-    private EditText accountRegisterName;
-    private EditText et_checkCode;
-    private EditText accountRegisterPassword;
-
+    private EditText accountRegisterName,et_checkCode,accountRegisterPassword;
     private TextView tv_getCheckCode;
-    private String CheckCode;
-
-    private String phoneNumber;
+    private String CheckCode,phoneNumber;
     private ProgressDialog dialog;
-
     private Button registerBtn;
     private TextView registerBackBtn;
 
@@ -62,7 +50,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         registerBackBtn = (TextView) findViewById(R.id.register_back_btn);
     }
 
-    private void initData() { }
+    private void initData() {}
 
     /*** 定义监听函数
      * @version 1.0
@@ -91,7 +79,11 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.i8_accountRegistern_toRegister:
                 /**点击注册，调用注册函数*/
-                sendCheckCode();
+                try {
+                    sendCheckCode();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 Intent intent1 = new Intent(RegisterActivity.this, LoginActivity.class);
                 startActivity(intent1);
                 break;
@@ -177,23 +169,22 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
      * 向服务器提交验证码，在监听回调中监听是否验证
      *@version 1.0
      */
-    private void sendCheckCode() {
+    private void sendCheckCode() throws Exception {
         CheckCode = et_checkCode.getText().toString();
         if (!TextUtils.isEmpty(CheckCode)) {
             dialog = ProgressDialog.show(this, null, "正在验证...", false, true);
             //提交短信验证码
             SMSSDK.submitVerificationCode("+86", phoneNumber, CheckCode);//国家号，手机号码，验证码
-            bmobRegisterAccount();
+            RegisterAccount();
         } else {
             Toast.makeText(this, "验证码不能为空", Toast.LENGTH_SHORT).show();
         }
     }
 
-
-    /**  bmob注册账号
+    /**  注册账号
      * @version 1.0
      */
-    private void bmobRegisterAccount() {
+    private void RegisterAccount() throws Exception {
         final String registerName = accountRegisterName.getText().toString().trim();
         final String registerPassword = accountRegisterPassword.getText().toString().trim();
 
@@ -201,46 +192,9 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
             showToast("注册账号或密码为空");
             return;
         }
-
-
-        /**BmobUser类为Bmob后端云提供类*/
-        RegisterUser bmobUser = new RegisterUser();
-        bmobUser.setUsername(registerName);
-        bmobUser.setPassword(registerPassword);
-        bmobUser.setAvatar("http://bmob.wxiou.cn/2021/05/30/fd1554e0406c2764801c53b41f7f4933.png");
-        bmobUser.signUp(new SaveListener<BmobUser>() {
-            @Override
-            public void done(BmobUser bmobUser, BmobException e) {
-                if (e == null) {
-                    showToast("恭喜，注册账号成功");
-                    finish();
-                } else {
-                    showToast("注册失败:" + e.getMessage());
-                }
-            }
-        });
-    }
-
-    /**
-     * 注册账号，将用户账号密码添加进数据库
-     * @param registerName     注册名
-     * @param registerPassword 密码
-     */
-    private void registerAccount(String registerName, String registerPassword) {
-        RegisterUser registerUser = new RegisterUser();
-        registerUser.setRegisterName(registerName);
-        registerUser.setRegisterPassword(registerPassword);
-        registerUser.save(new SaveListener<String>() {
-            @Override
-            public void done(String s, BmobException e) {
-                if (e == null) {
-                    showToast("恭喜，注册账号成功");
-                    finish();
-                } else {
-                    showToast("注册账号失败");
-                }
-            }
-        });
+        // 注册账号
+        showToast(UnicloudApi.Register(registerName, registerPassword, registerName));
+        finish();
     }
 
     /**
@@ -252,14 +206,12 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
-
     @Override
     protected void onDestroy() {
         SMSSDK.unregisterEventHandler(ev);
         if(dialog != null) {
             dialog.dismiss();
         }
-
         super.onDestroy();
     }
 

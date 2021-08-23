@@ -1,6 +1,7 @@
 package com.njupt.zyhy;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,6 +29,8 @@ public class Fragment_Me_news extends Activity implements View.OnClickListener{
     private ArrayList<String> mDataList,mDataList2;
     private ArrayList<String> ID;
     private Handler handler;
+    private SharedPreferences sp;
+    private JSONArray DataJSONArray;
 
     @Override
     public void onClick(View view) {
@@ -200,6 +203,8 @@ public class Fragment_Me_news extends Activity implements View.OnClickListener{
             }
         }
     }
+
+
 
     @Override
     protected void onDestroy() {

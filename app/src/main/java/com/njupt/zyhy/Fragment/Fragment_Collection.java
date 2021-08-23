@@ -2,9 +2,13 @@ package com.njupt.zyhy.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+
+import android.os.Handler;
+import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +32,7 @@ import com.njupt.zyhy.bean.InitBmob;
 import com.njupt.zyhy.bean.Msg;
 import com.njupt.zyhy.bean.MsgLab;
 import com.njupt.zyhy.bmob.restapi.Bmob;
+import com.njupt.zyhy.unicloud.UnicloudApi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +64,10 @@ public class Fragment_Collection extends Fragment implements AdapterView.OnItemC
 
     private ArrayList<String> C_id,C_Class,C_Voice,C_Name,C_Introduce,C_Pic1,C_Pic2,C_Pic3;
 
+    private JSONArray C_DataJSONArray;
+    private Handler handler;
+    private SharedPreferences sp;
+
     public Fragment_Collection() {
         // Required empty public constructor
     }
@@ -84,10 +93,38 @@ public class Fragment_Collection extends Fragment implements AdapterView.OnItemC
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        sp = getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+
+        //创建handler
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == 0x11) {
+                    JSONObject DataJSONObject = (JSONObject) msg.obj;
+                    C_DataJSONArray = DataJSONObject.getJSONArray("data");
+                    System.out.println(C_DataJSONArray.toString());
+
+                }
+            }
+        };
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //FIXME 这里直接更新ui是不行的
+                Message C_message = Message.obtain();
+                //还有其他更新ui方式,runOnUiThread()等
+                try {
+                    C_message.obj = GetData("uni-data-collection");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                C_message.what = 0x11;
+                handler.sendMessage(C_message);
+            }
+        }).start();
     }
 
     @Override
@@ -297,6 +334,10 @@ public class Fragment_Collection extends Fragment implements AdapterView.OnItemC
         item.setCityName("织绣");
         cityList.add(item);
         cityList.addAll(cityList);
+    }
+
+    private JSONObject GetData(String Table) throws Exception {
+        return UnicloudApi.GetData(sp.getString("token",""),Table);
     }
 
     private void inindate(){

@@ -1,8 +1,10 @@
 package com.njupt.zyhy;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,25 +17,21 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.njupt.zyhy.bean.GetHttpBitmap;
-import com.njupt.zyhy.bean.InitBmob;
-import com.njupt.zyhy.bean.SideslipListViews;
-import com.njupt.zyhy.bmob.restapi.Bmob;
-import java.util.ArrayList;
+import com.njupt.zyhy.bean.SideslipListView_lost;
+import com.njupt.zyhy.unicloud.UnicloudApi;
 
 
 public class Fragment_Me_lost extends Activity implements View.OnClickListener{
     private ImageView back;
     private static final String TAG = "MainActivity";
-    private SideslipListViews mSideslipListView;
+    private SideslipListView_lost mSideslipListView;
     private ImageButton imageButton;
-    private ArrayList<Bitmap> Lost_bit;
-    private ArrayList<String> Text_address;
-    private ArrayList<String> Text_title;
+    private JSONArray DataJSONArray;
     private Handler handler;
+    private SharedPreferences sp;
 
     @Override
     public void onClick(View view) {
@@ -51,6 +49,7 @@ public class Fragment_Me_lost extends Activity implements View.OnClickListener{
         }
 
     }
+    @SuppressLint("HandlerLeak")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,10 +59,7 @@ public class Fragment_Me_lost extends Activity implements View.OnClickListener{
         back.setOnClickListener(this);
         imageButton = (ImageButton) findViewById(R.id.add_lost);
         imageButton.setOnClickListener(this);
-
-        Lost_bit = new ArrayList<Bitmap>();
-        Text_address = new ArrayList<String>();
-        Text_title = new ArrayList<String>();
+        sp = this.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
 
         //创建handler
         handler = new Handler() {
@@ -71,16 +67,16 @@ public class Fragment_Me_lost extends Activity implements View.OnClickListener{
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 if (msg.what == 0x11) {
-                    String info = (String) msg.obj;
-                    inindate(info);
-                    mSideslipListView = (SideslipListViews) findViewById(R.id.lost_sideslipListView);
+                    JSONObject DataJSONObject = (JSONObject) msg.obj;
+                    DataJSONArray = DataJSONObject.getJSONArray("data");
+                    mSideslipListView = (SideslipListView_lost) findViewById(R.id.lost_sideslipListView);
                     mSideslipListView.setAdapter(new CustomAdapter());//设置适配器
                     //设置item点击事件
                     mSideslipListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             if (mSideslipListView.isAllowItemClick()) {
-                                Log.i(TAG, Text_title.get(position) + "被点击了");
+                                Log.i(TAG, DataJSONArray.getJSONObject(position).getString("title") + "被点击了");
                             }
                         }
                     });
@@ -95,7 +91,11 @@ public class Fragment_Me_lost extends Activity implements View.OnClickListener{
                 //FIXME 这里直接更新ui是不行的
                 Message message = Message.obtain();
                 //还有其他更新ui方式,runOnUiThread()等
-                message.obj = getdata();
+                try {
+                    message.obj = GetData("uni-data-lost");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 message.what = 0x11;
                 handler.sendMessage(message);
             }
@@ -108,12 +108,12 @@ public class Fragment_Me_lost extends Activity implements View.OnClickListener{
     class CustomAdapter extends BaseAdapter {
         @Override
         public int getCount() {
-            return Text_title.size();
+            return DataJSONArray.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return Text_title.get(position);
+            return DataJSONArray.getJSONObject(position).getString("title");
         }
 
         @Override
@@ -125,73 +125,56 @@ public class Fragment_Me_lost extends Activity implements View.OnClickListener{
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder viewHolder;
             View view = convertView;
+            JSONObject OneDate = DataJSONArray.getJSONObject(position);
+
             if (null == view) {
                 view = View.inflate(Fragment_Me_lost.this, R.layout.item_lost, null);
                 viewHolder = new ViewHolder();
                 viewHolder.text_title = (TextView) view.findViewById(R.id.text_title);
-                viewHolder.text_text =  (TextView) view.findViewById(R.id.text_text);
+                viewHolder.text_address =  (TextView) view.findViewById(R.id.text_text);
                 viewHolder.lost_image = (ImageView) view.findViewById(R.id.lost_iamge);
+                viewHolder.text_date = (TextView) view.findViewById(R.id.text_date);
+                viewHolder.text_user = (TextView) view.findViewById(R.id.text_user);
+                viewHolder.text_get = (TextView) view.findViewById(R.id.text_get);
                 view.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) view.getTag();
             }
-            viewHolder.text_title.setText(Text_title.get(position));
-            viewHolder.text_text.setText(Text_address.get(position));
-            viewHolder.lost_image.setImageBitmap(Lost_bit.get(position));
+            viewHolder.text_title.setText(OneDate.getString("title"));
+            viewHolder.text_address.setText(OneDate.getString("address"));
+
+            viewHolder.lost_image.setImageBitmap(GetHttpBitmap.getHttpBitmap(OneDate.getString("image")));
+            viewHolder.text_date.setText(OneDate.getString("add_time"));
+
+            if(sp.getString("id","").equals(OneDate.getString("user_id"))){
+                viewHolder.text_user.setText("我发布的");
+                viewHolder.text_user.setBackgroundResource(R.drawable.confirmdialog_text_orange);
+                viewHolder.text_user.setTextSize(10);
+            }else{
+                viewHolder.text_user.setText(OneDate.getString("user_id"));
+                viewHolder.text_user.setTextSize(6);
+                viewHolder.text_user.setBackgroundResource(R.drawable.confirmdialog_text_orange2);
+            }
+            if(OneDate.getString("get").equals("false")){
+                viewHolder.text_get.setText("未领取");
+                viewHolder.text_get.setBackgroundResource(R.drawable.confirmdialog_text_red);
+            }else{
+                viewHolder.text_get.setText("已领取");
+                viewHolder.text_get.setBackgroundResource(R.drawable.confirmdialog_text_green);
+            }
+
             return view;
         }
     }
 
     class ViewHolder {
         public ImageView lost_image;
-        public TextView text_text;
-        public TextView text_title;
-        public TextView txtv_delete;
-    }
-    private String getdata(){
-        String re;
-        re = Bmob.findAll("Lostinformation");
-        return re;
+        public TextView text_address, text_title, text_date, text_user, text_get;
     }
 
-    private void inindate(String re){
-        InitBmob.Initbmob();
-        String text,title;;
-        String id;
-        JSONObject jsonObject = null;
-        jsonObject = JSON.parseObject(re);
-        System.out.println(jsonObject);
-        //获取当前嵌套下的属性
-        String status = jsonObject.getString("results");
-        if (status!=null){
-            //获取嵌套中的json串,细心观察 content为json数组，里面可放多个json对象
-            JSONArray jsonArray = jsonObject.getJSONArray("results");
-            System.out.println(jsonArray);
-
-            for(int i =0;i < jsonArray.size(); i++) {
-                JSONObject jsonFirst = jsonArray.getJSONObject(i);
-
-                //取出这个json中的值
-                text = jsonFirst.getString("title");
-                if (text != null) {
-                    Text_title.add(text);
-                }
-                //取出这个json中的值
-                id = jsonFirst.getString("address");
-                if (id != null) {
-                    Text_address.add(id);
-                }
-                //取出这个json中的值
-                title = jsonFirst.getString("bit");
-                if (title != null) {
-
-                    Lost_bit.add(GetHttpBitmap.stringtoBitmap(title));
-                }
-            }
-        }
+    private JSONObject GetData(String Table) throws Exception {
+        return UnicloudApi.GetData(sp.getString("token",""),Table);
     }
-
-
 
     @Override
     protected void onDestroy() {

@@ -2,6 +2,8 @@ package com.njupt.zyhy;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -39,6 +41,9 @@ public class Fragment_Home_canguanyuyue_add extends Activity implements View.OnC
     private String etusername,IDStr,zjlx = "身份证",TIME = null;
     private TextView t_time;
     private int year,month,day;
+    private SharedPreferences Sp;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +53,7 @@ public class Fragment_Home_canguanyuyue_add extends Activity implements View.OnC
         etUserName =(EditText)findViewById(R.id.et_username);
         etPassWord =(EditText)findViewById(R.id.et_password);
         sp = (Spinner)findViewById(R.id.spin);
+        Sp = this.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         String[] arr = {"身份证","护照","港澳居民来往内地通行证","台湾居民来往内地通行证"};
 
 

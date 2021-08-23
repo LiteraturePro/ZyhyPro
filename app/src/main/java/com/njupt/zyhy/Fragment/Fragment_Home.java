@@ -1,16 +1,21 @@
 package com.njupt.zyhy.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 
 import com.alibaba.fastjson.JSON;
@@ -37,6 +42,7 @@ import com.njupt.zyhy.R;
 import com.njupt.zyhy.ScanActivity;
 import com.njupt.zyhy.bean.InitBmob;
 import com.njupt.zyhy.bmob.restapi.Bmob;
+import com.njupt.zyhy.unicloud.UnicloudApi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,12 +63,18 @@ public class Fragment_Home extends Fragment {
     private ArrayList<String> C_id,C_Class,C_Voice,C_Name,C_Introduce,C_Pic1,C_Pic2,C_Pic3;
     private ArrayList<String> Z_Title,Z_Subtitle,Z_Text,Z_Pic1,Z_Pic2,Z_Pic3,Z_Pic4;
 
+
+    private JSONArray C_DataJSONArray;
+    private JSONArray Z_DataJSONArray;
+    private Handler handler;
+    private SharedPreferences sp;
+
     BannerViewPager banner_1,banner_2,banner_3;
     List<String> urlList_wenwu,urlList_book,urlList_home;
     ImageView imageView,scan_imageView,Seach_imageView;
     CircleImageView CircleImageView1,CircleImageView2,CircleImageView3,CircleImageView4,CircleImageView5,CircleImageView6,CircleImageView7,CircleImageView8;
 
-    // TODO: Rename and change types of parameters
+
     private String mParam1;
     private String mParam2;
 
@@ -70,15 +82,6 @@ public class Fragment_Home extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Fragment_Home.
-     */
-    // TODO: Rename and change types and number of parameters
     public static Fragment_Home newInstance(String param1, String param2) {
         Fragment_Home fragment = new Fragment_Home();
         Bundle args = new Bundle();
@@ -95,7 +98,49 @@ public class Fragment_Home extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        //StatusBarCompat.setStatusBarColor(getActivity(),getResources().getColor(R.color.lastTextColor2));
+
+        sp = getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+
+        //创建handler
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == 0x11) {
+                    //String info = (String) msg.obj;
+                    JSONObject DataJSONObject = (JSONObject) msg.obj;
+                    C_DataJSONArray = DataJSONObject.getJSONArray("data");
+                    System.out.println(C_DataJSONArray.toString());
+
+                }else{
+                    JSONObject DataJSONObject = (JSONObject) msg.obj;
+                    Z_DataJSONArray = DataJSONObject.getJSONArray("data");
+                    System.out.println(Z_DataJSONArray.toString());
+                }
+            }
+        };
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //FIXME 这里直接更新ui是不行的
+                Message C_message = Message.obtain();
+                Message Z_message = Message.obtain();
+                //还有其他更新ui方式,runOnUiThread()等
+                try {
+                    C_message.obj = GetData("uni-data-collection");
+                    Z_message.obj = GetData("uni-data-exhibit");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                C_message.what = 0x11;
+                Z_message.what = 0x12;
+                handler.sendMessage(Z_message);
+                handler.sendMessage(C_message);
+            }
+        }).start();
+
     }
 
     @Override
@@ -106,6 +151,8 @@ public class Fragment_Home extends Fragment {
     @Override
     public void onActivityCreated(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+
         /**
          * 轮播图初始化
          */
@@ -213,7 +260,7 @@ public class Fragment_Home extends Fragment {
                     }
                 });
 
-        //铃铛点击事件
+        //消息点击事件
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -250,6 +297,7 @@ public class Fragment_Home extends Fragment {
                 startActivity(intent);
             }
         });
+
 
         /**
          * 按钮矩阵点击事件
@@ -495,4 +543,22 @@ public class Fragment_Home extends Fragment {
         }
         return re;
     }
+
+
+    private JSONObject GetData(String Table) throws Exception {
+        return UnicloudApi.GetData(sp.getString("token",""),Table);
+    }
+
+    /**
+     * @version 1.0
+     * @param msg 打印信息
+     */
+    private void showToast(String msg) {
+
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+
+
+
 }

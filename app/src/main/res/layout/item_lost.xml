@@ -20,44 +20,115 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:orientation="vertical"
-        android:padding="8dp">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:text="物品名称："/>
-            <TextView
-                android:id="@+id/text_title"
-                android:textSize="15sp"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp" />
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
 
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                android:text="领取地址："/>
 
-            <TextView
-                android:id="@+id/text_text"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:textSize="10sp"
-                android:text="text" />
+                android:layout_height="100dp"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:padding="8dp">
+                <LinearLayout
+                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:text="物品名称："/>
+                    <TextView
+                        android:id="@+id/text_title"
+                        android:textSize="15sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:text="领取地址："/>
+
+                    <TextView
+                        android:id="@+id/text_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:textSize="10sp"
+                        android:text="text" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_height="wrap_content"
+
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:text="发布时间："/>
+
+                    <TextView
+                        android:id="@+id/text_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:textSize="10sp"
+                        android:text="text" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="60dp"
+            android:orientation="vertical"
+            android:layout_height="100dp">
+            <LinearLayout
+                android:layout_width="60dp"
+                android:layout_marginTop="15dp"
+                android:layout_height="20dp">
+                <TextView
+                    android:id="@+id/text_user"
+                    android:layout_width="match_parent"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:text=""/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="60dp"
+                android:layout_marginTop="40dp"
+                android:layout_height="15dp">
+                <TextView
+                    android:id="@+id/text_get"
+                    android:layout_width="match_parent"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/confirmdialog_text_green"
+                    android:textSize="6sp"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:text="未领取"/>
+            </LinearLayout>
+
+
         </LinearLayout>
+
+
 
 
     </LinearLayout>

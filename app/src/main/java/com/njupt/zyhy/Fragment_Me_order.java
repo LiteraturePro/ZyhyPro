@@ -1,6 +1,7 @@
 package com.njupt.zyhy;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,17 +16,21 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.njupt.zyhy.bean.InitBmob;
-import com.njupt.zyhy.bean.SideslipListViews;
+import com.njupt.zyhy.bean.SideslipListView_lost;
 import com.njupt.zyhy.bmob.restapi.Bmob;
+import com.njupt.zyhy.unicloud.UnicloudApi;
 
 import java.util.ArrayList;
 
 public class Fragment_Me_order extends Activity implements View.OnClickListener{
     private ImageView back;
-    private SideslipListViews mSideslipListView;
+    private SideslipListView_lost mSideslipListView;
     private ArrayList<String> mDataList,mDataList2;
     private ArrayList<String> ID;
     private Handler handler;
+    private SharedPreferences sp;
+    private JSONArray DataJSONArray;
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -60,7 +65,7 @@ public class Fragment_Me_order extends Activity implements View.OnClickListener{
                 if (msg.what == 0x11) {
                     String info = (String) msg.obj;
                     inindate(info);
-                    mSideslipListView = (SideslipListViews) findViewById(R.id.order_sideslipListView);
+                    mSideslipListView = (SideslipListView_lost) findViewById(R.id.order_sideslipListView);
                     mSideslipListView.setAdapter(new CustomAdapter());//设置适配器
                 }
             }
@@ -135,10 +140,13 @@ public class Fragment_Me_order extends Activity implements View.OnClickListener{
     }
     class ViewHolder {
         public ImageView imageView;
-        public TextView text_text;
-        public TextView text_title;
-        public TextView txtv_delete;
+        public TextView text_text, text_title, txtv_delete;
     }
+
+    private JSONObject GetData(String Table) throws Exception {
+        return UnicloudApi.GetData(sp.getString("token",""),Table);
+    }
+
     private String getdata(){
         String re;
         re = Bmob.findAll("Order");

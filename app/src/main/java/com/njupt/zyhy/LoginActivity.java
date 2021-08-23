@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -19,21 +19,13 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.njupt.zyhy.bean.RegisterUser;
-
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
-import cn.bmob.v3.update.BmobUpdateAgent;
-
+import com.alibaba.fastjson.JSONObject;
+import com.njupt.zyhy.unicloud.UnicloudApi;
 
 public class LoginActivity extends Activity implements View.OnClickListener {
-    private EditText accountLoginName;
-    private EditText accountLoginPassword;
+    private EditText accountLoginName,accountLoginPassword;
     private Button loginBtn;
-    private TextView registerAccountBtn;
-    private TextView forgetBtn;
+    private TextView registerAccountBtn,forgetBtn;
     private ProgressBar progressBar;
     private LinearLayout llLogin;
     private AutoCompleteTextView accountLoginNames;
@@ -42,8 +34,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private CheckBox automatic_login;//自动登录选框
     private SharedPreferences sp;
 
-    private String userNameValue;
-    private String passwordValue;
+    private String userNameValue,passwordValue;
 
     private Boolean rem_isCheck = false;
     private Boolean auto_isCheck = false;
@@ -55,14 +46,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         /**加载xml文件*/
         setContentView(R.layout.activity_login);
 
-        sp = this.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-
-        // 在任何网络下检查更新
-        BmobUpdateAgent.setUpdateOnlyWifi(false);
-        BmobUpdateAgent.update(this);
+        sp = this.getSharedPreferences("userInfo", Context.MODE_MULTI_PROCESS);
 
         initView();
         initData();
@@ -103,13 +92,14 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 String etName = sp.getString("USER_NAME", "");
                 String etPassword = sp.getString("PASSWORD", "");
                 Log.e("自动恢复保存的账号密码", etName+etPassword);
+                System.out.println("登录成功之前的状态："+auto_isCheck_date);
                 accountLoginName.setText(etName);
                 accountLoginPassword.setText(etPassword);
 
                 //判断自动登陆多选框状态
                 if(auto_isCheck_date) {
                         //跳转界面
-                        bmobUserAccountLogin(etName, etPassword);
+                        UserAccountLogin(etName, etPassword);
                     }
             }
         }
@@ -152,7 +142,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.i8_accountLogin_toLogin:
                 /**点击登录，调用登录函数*/
-                bmobUserAccountLogin();
+                UserAccountLogin();
                 break;
             case R.id.register_account_btn:
                 /**点击注册，跳转到注册界面*/
@@ -170,7 +160,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     }
 
-    private void bmobUserAccountLogin() {
+    private void UserAccountLogin() {
 
         userNameValue = accountLoginName.getText().toString().trim();
         passwordValue = accountLoginPassword.getText().toString().trim();
@@ -179,94 +169,98 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             showToast("账号或密码不能为空");
             return;
         }
-
         /**显示进度条*/
         showProgressBar();
         /**登录过程*/
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                try {
+                    JSONObject Json = UnicloudApi.LoginJson(userNameValue,passwordValue);
+                    if (Json.getString("code").equals("0")){
+                        /**登录成功后进入主界面*/
+                        saveHistory("history",accountLoginNames);
+                        rem_isCheck = remember_key.isChecked();
+                        auto_isCheck = automatic_login.isChecked();
 
-                /**BmobUser类为Bmob后端云提供类*/
-                RegisterUser bmobUser = new RegisterUser();
-                bmobUser.setUsername(userNameValue);
-                bmobUser.setPassword(passwordValue);
-
-                bmobUser.login(new SaveListener<BmobUser>() {
-                    @Override
-                    public void done(BmobUser bmobUser, BmobException e) {
-                        if (e == null) {
-                            /**登录成功后进入主界面*/
-                            saveHistory("history",accountLoginNames);
-
-                            rem_isCheck = remember_key.isChecked();
-                            auto_isCheck = automatic_login.isChecked();
-
-                            //记住密码框为选中状态才保存用户信息
-                            if (rem_isCheck) {
-                                //记住用户名、密码、
-                                SharedPreferences.Editor editor = sp.edit();
-                                editor.putString("USER_NAME", userNameValue);
-                                editor.putString("PASSWORD", passwordValue);
-                                editor.putBoolean("rem_isCheck", rem_isCheck);
-                                editor.putBoolean("auto_isCheck", auto_isCheck);
-                                editor.putString("id", bmobUser.getObjectId());
-                                editor.commit();
-                            }
-
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            showToast(""+e.getMessage());
-                            Log.d("登录失败:",e.toString());
-                            /**隐藏进度条*/
-                            hiddenProgressBar();
+                        //记住密码框为选中状态才保存用户信息
+                        if (rem_isCheck) {
+                            //记住用户名、密码、
+                            SharedPreferences.Editor editor = sp.edit();
+                            editor.putString("USER_NAME", userNameValue);
+                            editor.putString("PASSWORD", passwordValue);
+                            editor.putBoolean("rem_isCheck", rem_isCheck);
+                            editor.putBoolean("auto_isCheck", auto_isCheck);
+                            editor.putString("id", Json.getString("uid"));
+                            editor.putString("token", Json.getString("token"));
+                            editor.putString("tokenExpired", Json.getString("tokenExpired"));
+                            editor.apply();
+                            System.out.println("登录成功的状态："+auto_isCheck);
                         }
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
-                });
+                    else{
+                        showToast(Json.getString("msg"));
+                        /**隐藏进度条*/
+                        hiddenProgressBar();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-        }, 3000);
+        }, 10);
     }
 
-    // bmobUserAccountLogin重载，使用自定义类
-    private void bmobUserAccountLogin(String accountName,String accountPassword ) {
+    // UserAccountLogin重载，使用自定义类
+    private void UserAccountLogin(String accountName,String accountPassword ) {
 
         if (TextUtils.isEmpty(accountName) || TextUtils.isEmpty(accountPassword) ) {
             showToast("账号或密码不能为空");
             return;
         }
-
         /**显示进度条*/
         showProgressBar();
         /**登录过程*/
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                try {
+                    JSONObject Json = UnicloudApi.LoginJson(accountName,accountPassword);
+                    if (Json.getString("code").equals("0")){
+                        /**登录成功后进入主界面*/
+                        saveHistory("history",accountLoginNames);
+                        rem_isCheck = remember_key.isChecked();
+                        auto_isCheck = automatic_login.isChecked();
 
-                /**BmobUser类为Bmob后端云提供类*/
-                BmobUser bmobUser = new BmobUser();
-                bmobUser.setUsername(accountName);
-                bmobUser.setPassword(accountPassword);
-
-                bmobUser.login(new SaveListener<BmobUser>() {
-                    @Override
-                    public void done(BmobUser bmobUser, BmobException e) {
-                        if (e == null) {
-                            /**登录成功后进入主界面*/
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            showToast(""+e.getMessage());
-                            Log.d("登录错误",e.toString());
-                            /**隐藏进度条*/
-                            hiddenProgressBar();
+                        //记住密码框为选中状态才保存用户信息
+                        if (rem_isCheck) {
+                            //记住用户名、密码、
+                            SharedPreferences.Editor editor = sp.edit();
+                            editor.putString("USER_NAME", accountName);
+                            editor.putString("PASSWORD", accountPassword);
+                            editor.putBoolean("rem_isCheck", rem_isCheck);
+                            editor.putBoolean("auto_isCheck", auto_isCheck);
+                            editor.putString("id", Json.getString("uid"));
+                            editor.putString("token", Json.getString("token"));
+                            editor.putString("tokenExpired", Json.getString("tokenExpired"));
+                            editor.apply();
                         }
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
-                });
+                    else{
+                        showToast(Json.getString("msg"));
+                        /**隐藏进度条*/
+                        hiddenProgressBar();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-        }, 3000);
+        }, 10);
     }
     /**
      * 初始化AutoCompleteTextView，最多显示5项提示，使

@@ -11,9 +11,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-/**
- * Created by JunkChen on 2016/3/29 0029.
- */
 public class SideslipListView extends ListView {
     private static final String TAG = "SideslipListView";
 
