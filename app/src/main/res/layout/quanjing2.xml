@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/yuna_image_view"
+                android:layout_width="match_parent"
+                android:layout_height="260sp"
+                android:src="@drawable/guanzang"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="陈松"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:padding="5sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="遵义会议纪念馆观长"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:padding="5sp"/>
+
+            <TextView
+                android:id="@+id/name_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:padding="10sp"
+                android:text="\u3000\u3000遵义会议纪念馆位于遵义市老城子尹路96号,是为纪念中国共产党历史上具有伟大历史意义的遵义会议而建立的、以遵义会议会址建筑为依托的纪念性博物馆。1955年10月对外开放，是中华人民共和国成立后最早建立的21个革命纪念馆之一。1961年3月，遵义会议会址被国务院确定为第一批全国重点文物保护单位；1964年底，毛泽东主席为遵义会议纪念馆题字；1993年、1995年、1996年、1997年，遵义会议纪念馆多次被国家文物局、共青团中央、国家教委、民政部、文化部、解放军总政治部、中宣部授予“全国第一批十个优秀社会教育基地”、“全国青少年社会教育基地”、“全国中小学爱国主义教育基地”、“全国百个爱国主义教育示范基地”等光荣称号；2005年，被评为国家AAAA级旅游景区；2008年5月16日，列入国家文物局首批国家一级博物馆；2010年5月，2011年12月分别获得中共中央纪律检查委员会、中华人民共和国监察部授予首批“全国廉政教育基地”，中央文明办评为全国第三批“全国文明单位”； 2017年，中共中央宣传部评为 “全国基层理论宣讲先进集体”；2018年全国关心下一代工作委员会授予“第一批全国关心下一代党史国史教育基地”。
+                              \n\u3000\u3000这里是全国人民进行党史学习、革命传统教育的课堂，是进行精神文明建设的重要阵地，前来参观学习的人络绎不绝，成为全国人民向往的革命圣地之一。
+                              \n\u3000\u3000“长征精神诲育千秋，遵义会议永放光芒”。遵义会议纪念馆不断弘扬遵义会议精神，拓展爱国主义教育功能，充分发挥社会主义教育基地作用。1993年被国家文物局选定为“全国优秀社会教育基地”。1995年，团中央命名为“全国青少年教育基地”。1996年，国家教委、团中央、国家文物局、文化部、民政部、解放军总政治部联合命名为“全国百个中小学爱国主义教育示范基地” 1997年6月，中共中央宣传部公布为100个爱国主义教育示范基地。2008年5月国家文物局公布“国家一级博物馆”。”
+                              \n\u3000\u30002015年6月16日，习近平总书记参观了遵义会议会址和遵义会议陈列馆后指出:遵义会议作为我们党历史上一次具有伟大转折意义的重要会议，在把马克思主义基本原理同中国具体实际相结合、坚持走独立自主道路、坚定正确的政治路线和政策策略，建设坚强成熟的中央领导集体等方面，留下宝贵经验和重要启示。我们要运用好遵义会议历史经验，让遵义会议精神永放光芒。"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                tools:ignore="MissingConstraints" />
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/bian_relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints"
+        android:paddingTop="10sp"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/bianminback"
+            android:layout_width="20sp"
+            android:layout_height="20sp"
+            android:src="@drawable/jiantou"
+            android:adjustViewBounds="true"
+            android:layout_marginTop="10sp"
+            android:layout_marginLeft="10sp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="便民服务"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="5sp"
+            android:layout_marginLeft="150sp"/>
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/bian_relative_layout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/zixun1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="咨询服务"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="#78201f"
+                    android:paddingTop="15sp"
+                    android:paddingLeft="10sp"/>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="190sp"
+                    android:layout_marginTop="18sp"
+                    android:src="@drawable/weizhi" />
+
+                <TextView
+                    android:id="@+id/bm_position"
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content"
+                    android:text="查看位置" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/zixun2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="遵义会议纪念馆咨询台（位置：北门入口处）"
+                android:textSize="15sp"
+                android:textColor="#000000"
+                android:paddingLeft="10sp"
+                android:paddingRight="10sp"/>
+
+            <ImageView
+                android:id="@+id/hex1"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:src="@drawable/hx"
+                android:layout_marginTop="10sp"
+                app:layout_constraintTop_toBottomOf="@+id/zixun2" />
+
+            <TextView
+                android:id="@+id/lunyi1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="轮椅、婴儿车"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="#78201f"
+                android:paddingLeft="10sp"
+                android:paddingTop="15sp"/>
+
+            <TextView
+                android:id="@+id/lunyi2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="当日免费使用，需提供有效证件及押金500元，在服务台即可办理手续。"
+                android:textSize="15sp"
+                android:textColor="#000000"
+                android:paddingLeft="10sp"
+                android:paddingRight="10sp"/>
+
+            <ImageView
+                android:id="@+id/hex2"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:src="@drawable/hx"
+                android:layout_marginTop="10sp"
+                app:layout_constraintTop_toBottomOf="@+id/lunyi2" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/shiwu1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="失物招领"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="#78201f"
+                    android:paddingLeft="10sp"
+                    android:paddingTop="15sp"/>
+
+                <TextView
+                    android:id="@+id/bm_lost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="180sp"
+                    android:text="查看失物列表" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/shiwu2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="如果您在展厅内丢失物品，请您及时到服务台进行登记；如果您已经离开，并且确定是在我馆丢失，请您拨打咨询热线0851-28229870咨询相关信息。"
+                android:textSize="15sp"
+                android:textColor="#000000"
+                android:paddingLeft="10sp"
+                android:paddingRight="10sp"/>
+
+            <ImageView
+                android:id="@+id/hex3"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:src="@drawable/hx"
+                android:layout_marginTop="10sp"
+                app:layout_constraintTop_toBottomOf="@+id/shiwu2" />
+
+            <TextView
+                android:id="@+id/liuyan1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="留言簿"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="#78201f"
+                android:paddingLeft="10sp"
+                android:paddingTop="15sp"/>
+
+            <TextView
+                android:id="@+id/liuyan2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="常设展览设有留言簿，欢迎观众踊跃留言!"
+                android:textSize="15sp"
+                android:textColor="#000000"
+                android:paddingLeft="10sp"/>
+
+            <ImageView
+                android:id="@+id/hex4"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:src="@drawable/hx"
+                android:layout_marginTop="10sp"
+                app:layout_constraintTop_toBottomOf="@+id/liuyan2" />
+
+            <TextView
+                android:id="@+id/yiji1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="应急处置"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="#78201f"
+                android:paddingLeft="10sp"
+                android:paddingTop="15sp"/>
+
+            <TextView
+                android:id="@+id/yiji2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="如果您在参观过程中突感身体不适或意外受伤，请及时与工作人员联系，若情况紧急，工作人员将尽快联系急救，送您到距离最近的正规医院进行处理。如果您在参观过程中与亲友走散，请前往服务台，工作人员将为您提供广播寻人服务。如遇突发情况，请您服从现场工作人员指挥，按照疏散标识快速有序的撤离至安全区域。"
+                android:textSize="15sp"
+                android:textColor="#000000"
+                android:paddingLeft="10sp"
+                android:paddingRight="10sp"/>
+
+            <ImageView
+                android:id="@+id/hex5"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:src="@drawable/hx"
+                android:layout_marginTop="10sp"
+                app:layout_constraintTop_toBottomOf="@+id/liuyan2" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <TextView
+                android:id="@+id/yijian1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="意见投诉"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="#78201f"
+                android:paddingLeft="10sp"
+                android:paddingTop="15sp"/>
+
+                <TextView
+                    android:id="@+id/bm_opinion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="210sp"
+                    android:text="在线反馈" />
+
+        </LinearLayout>
+
+            <TextView
+                android:id="@+id/yijian2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="如果您对场馆、展览、服务等有意见，请到遵义会议纪念馆服务台进行投诉。"
+                android:textSize="15sp"
+                android:textColor="#000000"
+                android:paddingLeft="10sp"
+                android:paddingRight="10sp"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

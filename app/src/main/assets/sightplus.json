@@ -1,0 +1,21 @@
+{
+  "images" :
+  [
+    {
+      "path" : "sightplus/argame00.jpg",
+      "name" : "argame00"
+    },
+    {
+      "path" : "sightplus/argame01.png",
+      "name" : "argame01"
+    },
+    {
+      "path" : "sightplus/argame02.jpg",
+      "name" : "argame02"
+    },
+    {
+      "path" : "sightplus/argame03.jpg",
+      "name" : "argame03"
+    }
+  ]
+}

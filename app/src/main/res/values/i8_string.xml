@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="i8_login_input_name_hint">5-15位数字、字母</string>
+    <string name="i8_login_input_password_hint">6-16个字符，区分大小写</string>
+    <string name="i8_login_accountLogin_input_name_hint">请输入帐号</string>
+    <string name="i8_login_accountLogin_input_password_hint">请输入密码</string>
+    <string name="i8_login_input_mobile_number_hint">手机号码</string>
+    <string name="i8_register_mobile_digits">0123456789</string>
+    <string name="i8_register_name_digits">
+        0123456789
+    </string>
+    <string name="i8_register_password_digits">
+        0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ
+    </string>
+
+    <string name="i8_gettingCapatcha">%ds后重新获取</string>
+    <string name="i8_find_password">找回密码</string>
+    <string name="i8_welcome_to_dayou">欢迎进入大游网络游戏</string>
+    <string name="i8_registered_user">《用户协议》</string>
+    <string name="i8_account_registered">帐户注册</string>
+    <string name="i8_login">登录</string>
+    <string name="i8_forget_password">《隐私政策》</string>
+    <string name="i8_QQ_login">QQ登录</string>
+    <string name="i8_mobile_login">手机登录</string>
+    <string name="i8_other_login">>>其他登录方式</string>
+    <string name="i8_immediately_login"> 立即登录</string>
+    <string name="i8_turnback_to_login">  返回登录</string>
+    <string name="i8_immediately_registered">立即注册</string>
+    <string name="i8_immediately_entry">立即进入</string>
+    <string name="i8_mobile_number">请输入手机号码</string>
+    <string name="i8_check_number">请输入验证码</string>
+    <string name="i8_check_dynamic_number">动态密码</string>
+    <string name="i8_get_check_number">获取动态密码</string>
+    <string name="i8_accept_protocol"> 我已经阅读并同意《大游用户注册服务协议》</string>
+    <string name="i8_other">其他:</string>
+    <string name="i8_mobile_register">手机注册</string>
+    <string name="i8_exchange_account">切换帐号</string>
+    <string name="i8_user_logining_tip">%s,登录中...</string>
+    <string name="i8_send_sms_to_check">将发送短信进行验证</string>
+    <string name="i8_gold_bean">金豆</string>
+    <string name="i8_pay_password">支付密码：</string>
+    <string name="i8_please_input_pay_password">请输入支付密码</string>
+    <string name="i8_didnot_setting_pay_password_tip">尚未设置金豆支付密码，请先</string>
+    <string name="i8_setting_pay_password">设置支付密码：</string>
+    <string name="i8_ensure_pay_password">确认支付密码：</string>
+    <string name="i8_open_pay_password_success_tip">恭喜开通支付密码成功</string>
+    <string name="i8_next_step">下一步</string>
+
+</resources>

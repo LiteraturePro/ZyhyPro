@@ -1,0 +1,115 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.mob.sdk'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        applicationId "com.njupt.zyhy"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true //添加在此
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            //可以根据需要来自行选择并添加对应cpu类型的.so库。
+            //abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a','x86', 'x86_64', 'mips', 'mips64'
+            abiFilters  'armeabi-v7a','x86', 'x86_64', 'mips', 'mips64'
+        }
+
+    }
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    applicationVariants.all {variant ->
+        variant.outputs.all {output ->
+            if (variant.buildType.name == "debug") {
+                output.outputFileName = "zyhy_v${android.defaultConfig.versionName}_debug.apk"
+            } else if (variant.buildType.name == "release") {
+                output.outputFileName = "zyhy_v${android.defaultConfig.versionName}_release.apk"
+            }
+        }
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    implementation files('libs\\AMap3DMap_7.9.1_AMapNavi_7.9.1_AMapSearch_7.9.0_AMapLocation_5.3.1_20210414.jar')
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation files('libs\\fastjson-1.2.53.jar')
+    implementation(name: 'dogeplayer-release-1.0.6', ext: 'aar')
+    implementation(name: 'EasyAR', ext: 'aar')
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    // 引入Bmob依赖
+    implementation 'io.github.bmob:android-sdk:3.8.4'
+    implementation "io.reactivex.rxjava2:rxjava:2.2.19"
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.8.1'
+    implementation 'com.squareup.okio:okio:2.7.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
+
+    // 引入导航栏
+    implementation 'com.github.Vincent7Wong:EasyNavigation:2.0.5'
+
+    // 图片加载依赖
+    implementation 'com.github.codbking:AllItemView:v1.0.0'
+    implementation 'com.github.lzjin:ViewPagerGallery:1.3'
+
+    // Leancloud
+    implementation 'cn.leancloud:storage-android:7.2.6'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+
+    // Glide
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    annotationProcessor 'com.github.sdfdzx:VRShow:v1.0.2'
+    implementation 'com.github.HanHuoBin:BaseDialog:1.2.0'
+    implementation 'com.journeyapps:zxing-android-embedded:3.5.0'
+    implementation ('com.github.niorgai:StatusBarCompat:2.1.4', {
+        exclude group: 'com.android.support'
+    })
+
+
+}
+
+// 在MobSDK的扩展中注册MobAPM的相关信息
+MobSDK {
+    appKey "m332e4581bb99a"
+    appSecret "6c69040192b16d1eb1cde93b72714578"
+    // Apm工具
+    MobApm {
+
+    }
+    // SMS验证
+    SMSSDK {
+
+    }
+    spEdition "fp" // 设定MobSDK为隐私协议适配版本
+    MobPush {
+
+    }
+
+}

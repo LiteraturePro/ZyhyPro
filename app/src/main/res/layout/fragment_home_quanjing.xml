@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/quan_relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints"
+        android:paddingTop="10sp"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/quanjinback"
+            android:layout_width="20sp"
+            android:layout_height="20sp"
+            android:src="@drawable/jiantou"
+            android:adjustViewBounds="true"
+            android:layout_marginTop="10sp"
+            android:layout_marginLeft="10sp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="全景介绍"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="5sp"
+            android:layout_marginLeft="150sp"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+
+        android:id="@+id/quan_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50.0dip"
+        android:background="#FFFFFF"
+        app:layout_constraintTop_toBottomOf="@id/quan_relative_layout">
+        <!--layout_weight这个属性为权重，让两个textview平分这个linearLayout-->
+        <TextView
+            android:id="@+id/videoLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="本馆简介"
+            android:textColor="#78201f"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/musicLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="馆长致辞"
+            android:textColor="#000000"
+            android:textSize="17sp" />
+
+    </LinearLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
+    </androidx.viewpager.widget.ViewPager>
+
+</LinearLayout>

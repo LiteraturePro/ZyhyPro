@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/zyhy_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="294dp"
+        android:layout_gravity="center_vertical"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:paddingLeft="36dp"
+        android:paddingRight="41dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@drawable/i8_login_line_bg"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="44dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/zyhy_phone" />
+
+
+            <EditText
+                android:id="@+id/i8_accountRegister_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:digits="@string/i8_register_name_digits"
+                android:ems="10"
+                android:hint="请输入注册手机号"
+                android:inputType="textPersonName"
+                android:maxLength="15"
+                android:singleLine="true"
+                android:textColor="@color/i8_light_black"
+                android:textColorHint="@color/i8_login_edit_hint"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_pass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_user"
+            android:paddingLeft="10dp"
+            android:paddingRight="16dp">
+
+            <ImageView
+                android:layout_width="44dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/zyhy_yzm"/>
+
+            <EditText
+                android:id="@+id/et_checkCode"
+                android:layout_width="0dp"
+
+                android:layout_height="wrap_content"
+                android:layout_weight="5" />
+
+            <TextView
+                android:id="@+id/tv_getCheckCode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:clickable="true"
+                android:gravity="center"
+                android:textColor="#78201f"
+                android:text="验证码" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/I8d44"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/i8_login_line_bg"
+            android:gravity="center_vertical"
+            android:paddingLeft="4dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="42dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/I8d10"
+                android:layout_marginRight="@dimen/I8d10"
+                android:src="@drawable/zyhy_password" />
+
+            <EditText
+                android:id="@+id/i8_accountRegister_password"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:inputType="textPassword"
+                android:digits="@string/i8_register_password_digits"
+                android:ems="10"
+                android:hint="请输入注册密码"
+                android:maxLength="16"
+                android:singleLine="true"
+                android:textColor="@color/i8_light_black"
+                android:textColorHint="@color/i8_login_edit_hint"
+                android:textSize="12sp" />
+
+            <ToggleButton
+                android:id="@+id/i8_usercenter_autoLogin"
+                android:layout_width="@dimen/I8d25"
+                android:layout_height="@dimen/I8d25"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="@dimen/I8d12"
+                android:background="@drawable/i8_login_eye"
+                android:checked="false"
+                android:text=""
+                android:textOff=""
+                android:textOn="" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/i8_accountLoginBtnLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/I8d35"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/i8_accountRegistern_toRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/I8d45"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:background="@drawable/i8_login_btn_bg"
+                android:text="注册"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/i8_edit_text_size_16" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/register_back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="14dp"
+            android:text="返回登录"
+            android:textColor="#78201f" />
+    </LinearLayout>
+
+</LinearLayout>

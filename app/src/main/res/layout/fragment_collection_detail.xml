@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/detail_linear_layout_1"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#FFFFFF"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints">
+
+        <RelativeLayout
+            android:id="@+id/bian_relative_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            tools:ignore="MissingConstraints"
+            android:paddingTop="10sp"
+            android:background="@color/white">
+
+            <ImageView
+                android:id="@+id/wenwu_back"
+                android:layout_width="20sp"
+                android:layout_height="20sp"
+                android:src="@drawable/jiantou"
+                android:adjustViewBounds="true"
+                android:layout_marginTop="6sp"
+                android:layout_marginLeft="10sp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="文物详情"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginTop="5sp"
+                android:layout_marginLeft="150sp"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_linear_layout_1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/detail_linear_layout_2"
+                android:layout_width="match_parent"
+                android:layout_height="190dp">
+
+                <com.lzj.gallery.library.views.BannerViewPager
+                    android:id="@+id/banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@drawable/confirmdialog4"
+                >
+                <LinearLayout
+                    android:id="@+id/detail_linear_layout_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10sp"
+                    android:background="@drawable/confirmdialog4"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@id/detail_linear_layout_2">
+
+
+                    <SeekBar android:id="@+id/SeekBar01"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="fill_parent"
+                        android:layout_below="@id/ButtonPlayStop" />
+                    <ImageButton
+                        android:id="@+id/ButtonPlayStop"
+                        android:src="@drawable/play"
+                        android:layout_gravity="center"
+                        android:background="@drawable/confirmdialog4"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/detail_linear_layout_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="#f4f4f4"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@id/detail_linear_layout_3">
+
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/text_view_background"
+                        android:layout_gravity="center"
+                        android:text="中国共产党中央 "
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10sp"
+                    app:layout_constraintTop_toBottomOf="@id/detail_linerar_layout_5">
+                    <TextView
+                        android:id="@+id/Introduce"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10sp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:paddingTop="20sp"
+                        android:paddingRight="10sp"
+                        android:text="政中国共产党核献。 "
+                        android:textColor="@color/black"
+                        android:background="@drawable/confirmdialog5"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageButton
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:background="#f4f4f4">
+
+                    </ImageButton>
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

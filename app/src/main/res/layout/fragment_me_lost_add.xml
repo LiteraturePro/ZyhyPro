@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/bian_relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints"
+        android:paddingTop="10sp"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/lost_add_back"
+            android:layout_width="20sp"
+            android:layout_height="20sp"
+            android:src="@drawable/jiantou"
+            android:adjustViewBounds="true"
+            android:layout_marginTop="6sp"
+            android:layout_marginLeft="10sp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="失物招领"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="2sp"
+            android:layout_marginLeft="150sp"/>
+
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/confirmdialog"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="请上传物品图片"/>
+
+            <ImageView
+                android:id="@+id/lsot_add_pic"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:src="@drawable/uplosd"
+                >
+            </ImageView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            style="@style/InputBoxStyle"
+            android:layout_height="50dp">
+            <EditText
+                android:id="@+id/lost_name"
+                style="@style/EditTextStyle"
+                android:layout_width="match_parent"
+                android:hint="请输入物品名称"
+                android:layout_height="50dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            style="@style/InputBoxStyle"
+            android:layout_height="50dp">
+            <EditText
+                android:id="@+id/lost_address"
+                style="@style/EditTextStyle"
+                android:layout_width="match_parent"
+                android:hint="请输入领取地址"
+                android:layout_height="50dp"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/lost_put"
+            android:layout_width="120dp"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:text="提交信息"
+            android:textSize="20dp"
+            android:background="@drawable/confirmdialog"
+            android:layout_height="50dp">
+
+        </Button>
+    </LinearLayout>
+
+
+</LinearLayout>

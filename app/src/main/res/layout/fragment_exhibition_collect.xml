@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f4f4f4">
+
+    <RelativeLayout
+        android:id="@+id/bian_relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints"
+        android:paddingTop="10sp"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/collect_back"
+            android:layout_width="20sp"
+            android:layout_height="20sp"
+            android:src="@drawable/jiantou"
+            android:adjustViewBounds="true"
+            android:layout_marginTop="6sp"
+            android:layout_marginLeft="10sp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="文物登记"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="5sp"
+            android:layout_marginLeft="150sp"/>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="150sp"
+        android:src="@drawable/deng"/>
+
+    <LinearLayout
+        android:layout_marginTop="10sp"
+        android:layout_gravity="center"
+        android:layout_width="370sp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical"
+        android:background="@color/white">
+
+        <EditText
+            android:id="@+id/c_miaosu"
+            android:layout_marginTop="10sp"
+            android:background="@drawable/textview_border_deng"
+            android:paddingTop="10sp"
+            android:paddingLeft="5sp"
+            android:paddingRight="5sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="350sp"
+            android:layout_height="100sp"
+            android:textSize="15dp"
+            android:hint="藏品描述：（200字以内）"/>
+
+        <EditText
+            android:id="@+id/c_laiyuan"
+            android:layout_marginTop="10sp"
+            android:background="@drawable/textview_border_deng"
+            android:paddingTop="10sp"
+            android:paddingLeft="5sp"
+            android:textSize="15dp"
+            android:paddingRight="5sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="350sp"
+            android:layout_height="100sp"
+            android:hint="藏品真是来源：（流传至您手中的经历；200字以内）"/>
+
+        <EditText
+            android:id="@+id/c_name"
+            android:layout_marginTop="10sp"
+            android:background="@drawable/textview_border_deng"
+            android:paddingTop="10sp"
+            android:paddingLeft="5sp"
+            android:textSize="15dp"
+            android:paddingRight="5sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="350sp"
+            android:layout_height="40sp"
+            android:hint="请输入姓名"/>
+
+        <EditText
+            android:id="@+id/c_lainxi"
+            android:layout_marginTop="10sp"
+            android:background="@drawable/textview_border_deng"
+            android:paddingTop="10sp"
+            android:textSize="15dp"
+            android:paddingLeft="5sp"
+            android:paddingRight="5sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="350sp"
+            android:layout_height="40sp"
+            android:hint="请输入联系方式"/>
+
+        <Button
+            android:id="@+id/coo_put"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:background="@drawable/i8_login_btn_bg"
+            android:text="提交"
+            android:textColor="@color/white"/>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

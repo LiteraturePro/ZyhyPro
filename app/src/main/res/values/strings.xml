@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">遵义会议</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="play_str">点击播放</string>
+    <string name="pause_str">停止播放</string>
+</resources>

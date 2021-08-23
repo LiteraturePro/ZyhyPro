@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/zyhy_bg">
+
+    <LinearLayout
+        android:id="@+id/ll_login"
+        android:layout_width="match_parent"
+        android:layout_height="304dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="141dp"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:paddingLeft="36dp"
+        android:paddingRight="41dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@drawable/i8_login_line_bg"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="44dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/zyhy_login" />
+
+
+            <AutoCompleteTextView
+                android:id="@+id/i8_accountLogin_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:digits="@string/i8_register_name_digits"
+                android:ems="10"
+                android:hint="@string/i8_login_accountLogin_input_name_hint"
+                android:inputType="textPersonName"
+                android:maxLength="15"
+                android:singleLine="true"
+                android:textColor="@color/i8_light_black"
+                android:textColorHint="@color/i8_login_edit_hint"
+                android:textSize="12sp" />
+
+
+            <ImageView
+                android:id="@+id/i8_accountLoginSelect"
+                android:layout_width="@dimen/I8d45"
+                android:layout_height="@dimen/I8d45"
+                android:layout_gravity="center_vertical"
+                android:scaleType="center"
+                android:src="@drawable/i8_login_selectaccount" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/I8d44"
+            android:layout_marginTop="@dimen/I8d14"
+            android:background="@drawable/i8_login_line_bg"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="44dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/I8d10"
+                android:layout_marginRight="@dimen/I8d10"
+                android:src="@drawable/zyhy_password" />
+
+            <EditText
+                android:id="@+id/i8_accountLogin_password"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:digits="@string/i8_register_password_digits"
+                android:ems="10"
+                android:hint="@string/i8_login_accountLogin_input_password_hint"
+                android:inputType="textPassword"
+                android:maxLength="16"
+                android:singleLine="true"
+                android:textColor="@color/i8_light_black"
+                android:textColorHint="@color/i8_login_edit_hint"
+                android:textSize="12sp" />
+
+            <ToggleButton
+                android:id="@+id/i8_usercenter_autoLogin"
+                android:layout_width="@dimen/I8d25"
+                android:layout_height="@dimen/I8d25"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="@dimen/I8d12"
+                android:background="@drawable/i8_login_eye"
+                android:checked="false"
+                android:text=""
+                android:textOff=""
+                android:textOn="" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/I8d45"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/remember_key"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:text="记住密码"
+                android:textColor="#78201f" />
+
+            <CheckBox
+                android:id="@+id/automatic_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="25dp"
+                android:clickable="true"
+                android:text="自动登录"
+                android:textColor="#78201f"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/i8_accountLoginBtnLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/i8_accountLogin_toLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/I8d45"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:background="@drawable/i8_login_btn_bg"
+                android:text="@string/i8_login"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/i8_edit_text_size_16" />
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/I8d45"
+        android:layout_marginTop="500dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/register_account_btn"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="注册账号"
+            android:textColor="#78201f" />
+        <TextView
+            android:id="@+id/forget_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="20dp"
+            android:clickable="true"
+            android:text="忘记密码"
+            android:textColor="#78201f"/>
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/pb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:indeterminate="true" />
+
+</RelativeLayout>

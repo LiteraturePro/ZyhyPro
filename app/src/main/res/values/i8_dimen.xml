@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="i8_login_mobileLogin_content">180dp</dimen>
+    <dimen name="i8_login_accountLogin_content">300dp</dimen>
+    <dimen name="i8_login_regaccount_content">270dp</dimen>
+    <dimen name="i8_login_captcha_content">300dp</dimen>
+    <dimen name="i8_login_padding_left_right">15dp</dimen>
+    <dimen name="i8_float_menu_margin_top">30dp</dimen>
+    <dimen name="i8_float_menu_margin_bottom">30dp</dimen>
+    <dimen name="i8_badge_number_text_size">12sp</dimen>
+
+    <!-- 输入框文字大小-->
+    <dimen name="i8_edit_text_size">18sp</dimen>
+    <dimen name="i8_edit_text_size_16">16sp</dimen>
+    <dimen name="i8_edit_text_size_14">14sp</dimen>
+    <dimen name="i8_title_text_size_20">20sp</dimen>
+    <dimen name="i8_button_text_size_19">19sp</dimen>
+    <dimen name="i8_get_captcha_text_size_15">15sp</dimen>
+    <dimen name="i8_tip_text_size_13">13sp</dimen>
+    <dimen name="i8_main_now_text_size_24">24sp</dimen>
+    <dimen name="i8_text_size_18">18sp</dimen>
+
+    <!-- title高度-->
+    <dimen name="i8_title_height">60dp</dimen>
+
+
+    <!--边距，大小等-->
+    <dimen name="I8d0">0dp</dimen>
+    <dimen name="I8d1">1dp</dimen>
+    <dimen name="I8d2">2dp</dimen>
+    <dimen name="I8d3">3dp</dimen>
+    <dimen name="I8d4">4dp</dimen>
+    <dimen name="I8d5">5dp</dimen>
+    <dimen name="I8d6">6dp</dimen>
+    <dimen name="I8d8">8dp</dimen>
+    <dimen name="I8d9">9dp</dimen>
+    <dimen name="I8d10">10dp</dimen>
+    <dimen name="I8d12">12dp</dimen>
+    <dimen name="I8d14">14dp</dimen>
+    <dimen name="I8d15">15dp</dimen>
+    <dimen name="I8d20">20dp</dimen>
+    <dimen name="I8d25">25dp</dimen>
+    <dimen name="I8d30">30dp</dimen>
+    <dimen name="I8d35">35dp</dimen>
+    <dimen name="I8d39">39dp</dimen>
+    <dimen name="I8d44">44dp</dimen>
+    <dimen name="I8d45">45dp</dimen>
+    <dimen name="I8d50">50dp</dimen>
+    <dimen name="I8d60">60dp</dimen>
+    <dimen name="I8d80">80dp</dimen>
+    <dimen name="I8d90">90dp</dimen>
+    <dimen name="I8d189">189dp</dimen>
+    <dimen name="I8d280">280dp</dimen>
+    <dimen name="I8d300">300dp</dimen>
+    <dimen name="I8d330">330dp</dimen>
+    <dimen name="I8d360">360dp</dimen>
+</resources>

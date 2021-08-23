@@ -1,0 +1,4 @@
+rootProject.name = "ZyhyPro"
+include ':app'
+include ':testmodulelibrary'
+include ':banners'

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f4f4f4">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imageView16"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            app:srcCompat="@drawable/jiantou" />
+
+        <TextView
+            android:id="@+id/textView30"
+            android:layout_width="310dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="党建活动"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="20dp" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/l1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/white">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="170dp"
+                        android:layout_margin="15dp"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/dang" />
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:paddingTop="10sp"
+                    android:paddingRight="5sp"
+                    android:paddingLeft="5sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="\u3000\u3000习近平总书记强调，“一个博物院就是一所大学校。”好学校就应当既有好老师又有好课程。遵义会议纪念馆以传统品牌活动为基础，隆重推出《党建活动》，就是要通过大咖们的精彩讲述，对值得反复回味的展览和藏品进行再聚焦再阐释，把学术严谨性和课堂生动性融会贯通起来，进而作出拓展性的诠释。从这个意义来说，《党建活动》以重构观众与馆藏资源的认知纽带与体验模式为导向，将历史文化、时代背境与文物藏品融于一体，不仅有助于观众丰富历史文物知识，进一步开拓视野、提升鉴赏能力和水平，而且能够引导观众通过云端课堂掌握历史文化学习的“自由裁量权”和时间利用的“灵活支配权”，切身体验博大深邃的历史空间、感悟魅力无穷的历史智慧，从而更进一步坚定文化自信，更好地传承弘扬中华优秀传统文化的精神标识。"
+            />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_marginTop="10sp"
+                android:paddingLeft="5sp"
+                android:paddingRight="5sp"
+                android:paddingTop="5sp"
+                android:paddingBottom="5sp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="活动回顾"
+                    android:textColor="#78201f"
+                    android:textSize="20sp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+                        xmlns:tools="http://schemas.android.com/tools"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/id_edu_msgList"
+                        android:divider="@null"
+                        android:numColumns="auto_fit"
+                        android:background="#ffffff"
+                        android:paddingTop="8dp">
+                    </GridView>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
