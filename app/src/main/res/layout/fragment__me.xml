@@ -38,13 +38,26 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tv_mine" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <ImageView
+        <com.shehuan.niv.NiceImageView
             android:layout_gravity="center_horizontal"
-            android:id="@+id/headimg"
-            android:src="@drawable/common_img_placeholder_avatar"
             android:layout_width="75.0dip"
+            android:id="@+id/headimg"
             android:layout_height="75.0dip"
-            android:layout_marginTop="25.0dip" />
+            android:layout_marginTop="25.0dip"
+            android:src="@drawable/common_img_placeholder_avatar"
+            app:border_color="#FF7F24"
+            app:border_width="1dp"
+            app:inner_border_color="#000fff"
+            app:is_circle="true" />
+
+
+<!--        <ImageView-->
+<!--            android:layout_gravity="center_horizontal"-->
+<!--            android:id="@+id/headimg"-->
+<!--            android:src="@drawable/common_img_placeholder_avatar"-->
+<!--            android:layout_width="75.0dip"-->
+<!--            android:layout_height="75.0dip"-->
+<!--            android:layout_marginTop="25.0dip" />-->
         <TextView
             android:textSize="18.0sp"
             android:textColor="#ff373737"

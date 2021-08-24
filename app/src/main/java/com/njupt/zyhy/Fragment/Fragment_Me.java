@@ -45,6 +45,7 @@ import com.njupt.zyhy.R;
 import com.njupt.zyhy.bean.GetHttpBitmap;
 import com.njupt.zyhy.bean.ImageUtil;
 import com.njupt.zyhy.unicloud.UnicloudApi;
+import com.shehuan.niv.NiceImageView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -62,7 +63,7 @@ public class Fragment_Me extends Fragment {
     private String mParam1;
     private String mParam2;
     private TextView textView;
-    private ImageView imageView;
+    private NiceImageView imageView;
     private Bitmap bitmap;
     private Bitmap bitmap_upload;
     private String TAG = "tag";
@@ -116,7 +117,7 @@ public class Fragment_Me extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment__me, container, false);
-        imageView = (ImageView) view.findViewById(R.id.headimg);
+        imageView = (NiceImageView) view.findViewById(R.id.headimg);
         textView = (TextView) view.findViewById(R.id.name);
         String uid = sp.getString("id","");
 

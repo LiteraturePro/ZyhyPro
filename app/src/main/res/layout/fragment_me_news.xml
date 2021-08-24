@@ -43,15 +43,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp">
-        <com.njupt.zyhy.bean.SideslipListView
+        <com.njupt.zyhy.bean.SideslipListView_news
             android:id="@+id/news_sideslipListView"
             android:scrollingCache="false"
             android:cacheColorHint="#00000000"
             android:divider="#ffeeeeee"
-            android:dividerHeight="10dp"
+            android:dividerHeight="0dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        </com.njupt.zyhy.bean.SideslipListView>
+        </com.njupt.zyhy.bean.SideslipListView_news>
     </LinearLayout>
 
 

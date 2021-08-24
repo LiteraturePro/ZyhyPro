@@ -72,6 +72,7 @@ dependencies {
 
     // 引入导航栏
     implementation 'com.github.Vincent7Wong:EasyNavigation:2.0.5'
+    implementation 'com.github.SheHuan:NiceImageView:1.0.5'
 
     // 图片加载依赖
     implementation 'com.github.codbking:AllItemView:v1.0.0'

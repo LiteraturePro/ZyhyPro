@@ -19,12 +19,12 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.njupt.zyhy.bean.SideslipListView_order;
+import com.njupt.zyhy.bean.SideslipListView;
 import com.njupt.zyhy.unicloud.UnicloudApi;
 
 public class Fragment_Me_order extends Activity implements View.OnClickListener{
     private ImageView back;
-    private SideslipListView_order mSideslipListView;
+    private SideslipListView mSideslipListView;
 
 
     private Handler handler;
@@ -64,7 +64,7 @@ public class Fragment_Me_order extends Activity implements View.OnClickListener{
                 if (msg.what == 0x11) {
                     JSONObject DataJSONObject = (JSONObject) msg.obj;
                     DataJSONArray = DataJSONObject.getJSONArray("data");
-                    mSideslipListView = (SideslipListView_order) findViewById(R.id.order_sideslipListView);
+                    mSideslipListView = (SideslipListView) findViewById(R.id.order_sideslipListView);
                     mSideslipListView.setAdapter(new CustomAdapter());//设置适配器
 
                     mSideslipListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

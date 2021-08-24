@@ -22,15 +22,14 @@ import androidx.annotation.Nullable;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.njupt.zyhy.bean.GetHttpBitmap;
-import com.njupt.zyhy.bean.SideslipListView_lost;
-import com.njupt.zyhy.bmob.restapi.Bmob;
+import com.njupt.zyhy.bean.SideslipListView;
 import com.njupt.zyhy.unicloud.UnicloudApi;
 
 
 public class Fragment_Me_lost extends Activity implements View.OnClickListener{
     private ImageView back;
     private static final String TAG = "MainActivity";
-    private SideslipListView_lost mSideslipListView;
+    private SideslipListView mSideslipListView;
     private ImageButton imageButton;
     private JSONArray DataJSONArray;
     private Handler handler;
@@ -72,7 +71,7 @@ public class Fragment_Me_lost extends Activity implements View.OnClickListener{
                 if (msg.what == 0x11) {
                     JSONObject DataJSONObject = (JSONObject) msg.obj;
                     DataJSONArray = DataJSONObject.getJSONArray("data");
-                    mSideslipListView = (SideslipListView_lost) findViewById(R.id.lost_sideslipListView);
+                    mSideslipListView = (SideslipListView) findViewById(R.id.lost_sideslipListView);
                     mSideslipListView.setAdapter(new CustomAdapter());//设置适配器
                     //设置item点击事件
                     mSideslipListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
