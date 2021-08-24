@@ -7,7 +7,6 @@ public class Msg {
     private int id ;
     private Bitmap imgResId;
     private String title;
-    //private String content;
 
     public Msg(){
 
@@ -17,7 +16,6 @@ public class Msg {
         this.id = id;
         this.imgResId = imgResId;
         this.title = title;
-        //this.content = content;
     }
 
     public int getId() {

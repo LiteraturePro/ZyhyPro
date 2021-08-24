@@ -32,7 +32,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class Fragment_Exhibition_collect extends AppCompatActivity implements View.OnClickListener {
+public class Fragment_exhibition_collect extends AppCompatActivity implements View.OnClickListener {
 
     private Button button;
     private ImageView back,photoIv,camereIv,add_pic;
@@ -147,9 +147,9 @@ public class Fragment_Exhibition_collect extends AppCompatActivity implements Vi
                     @Override
                     public void onClick(int which) {
                         //检查是否已经获得相机的权限
-                        if (verifyPermissions(Fragment_Exhibition_collect.this, PERMISSIONS_STORAGE[2]) == 0) {
+                        if (verifyPermissions(Fragment_exhibition_collect.this, PERMISSIONS_STORAGE[2]) == 0) {
                             Log.i(TAG, "提示是否要授权");
-                            ActivityCompat.requestPermissions(Fragment_Exhibition_collect.this, PERMISSIONS_STORAGE, 3);
+                            ActivityCompat.requestPermissions(Fragment_exhibition_collect.this, PERMISSIONS_STORAGE, 3);
                         } else {
                             //已经有权限
                             toCamera();  //打开相机

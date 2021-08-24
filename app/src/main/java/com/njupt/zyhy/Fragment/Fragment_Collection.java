@@ -24,7 +24,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.njupt.zyhy.Adapter.MsgAdapter;
-import com.njupt.zyhy.Fragment_Exhibition_collect;
+import com.njupt.zyhy.Fragment_exhibition_collect;
 import com.njupt.zyhy.Fragment_Home_seach;
 import com.njupt.zyhy.Fragment_collection_detail;
 import com.njupt.zyhy.R;
@@ -54,9 +54,9 @@ public class Fragment_Collection extends Fragment implements AdapterView.OnItemC
     private String mParam2;
     private ImageView deng;
 
-    List<CityItem> cityList;
-    GridView gridView;
-    ImageView imageView;
+    private List<CityItem> cityList;
+    private GridView gridView;
+    private ImageView imageView;
 
     private GridView mLvMsgList;
     private List<Msg> mDatas = new ArrayList<>();
@@ -103,7 +103,7 @@ public class Fragment_Collection extends Fragment implements AdapterView.OnItemC
                 if (msg.what == 0x11) {
                     JSONObject DataJSONObject = (JSONObject) msg.obj;
                     C_DataJSONArray = DataJSONObject.getJSONArray("data");
-                    System.out.println(C_DataJSONArray.toString());
+
 
                 }
             }
@@ -167,7 +167,7 @@ public class Fragment_Collection extends Fragment implements AdapterView.OnItemC
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getActivity(), Fragment_Exhibition_collect.class);
+                Intent intent = new Intent(getActivity(), Fragment_exhibition_collect.class);
                 startActivity(intent);
             }
         });

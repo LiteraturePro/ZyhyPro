@@ -56,7 +56,7 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:icon,android:theme">
         <activity android:name=".Fragment_Home_Dangjiang"></activity>
-        <activity android:name=".Fragment_Exhibition_collect" />
+        <activity android:name=".Fragment_exhibition_collect" />
 
         <uses-library
             android:name="org.apache.http.legacy"
