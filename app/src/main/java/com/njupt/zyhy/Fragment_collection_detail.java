@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
+
+import com.alibaba.fastjson.JSONArray;
 import com.lzj.gallery.library.views.BannerViewPager;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,12 +47,14 @@ public class Fragment_collection_detail extends Activity implements View.OnClick
          * 获取数据
          */
         Intent intent=getIntent();
+
         String C_Name=intent.getStringExtra("C_Name");
         C_Voice=intent.getStringExtra("C_Voice");
         String C_Introduce=intent.getStringExtra("C_Introduce");
         String C_Pic1=intent.getStringExtra("C_Pic1");
         String C_Pic2=intent.getStringExtra("C_Pic2");
         String C_Pic3=intent.getStringExtra("C_Pic3");
+
 
         urlList_home = new ArrayList<>();
         urlList_home.add(C_Pic1);

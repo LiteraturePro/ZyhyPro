@@ -1,5 +1,6 @@
 package com.njupt.zyhy.Fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,7 +21,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.njupt.zyhy.Adapter.MsgAdapter;
@@ -28,10 +28,8 @@ import com.njupt.zyhy.Fragment_exhibition_collect;
 import com.njupt.zyhy.Fragment_Home_seach;
 import com.njupt.zyhy.Fragment_collection_detail;
 import com.njupt.zyhy.R;
-import com.njupt.zyhy.bean.InitBmob;
 import com.njupt.zyhy.bean.Msg;
 import com.njupt.zyhy.bean.MsgLab;
-import com.njupt.zyhy.bmob.restapi.Bmob;
 import com.njupt.zyhy.unicloud.UnicloudApi;
 
 import java.util.ArrayList;
@@ -54,7 +52,7 @@ public class Fragment_Collection extends Fragment implements AdapterView.OnItemC
     private String mParam2;
     private ImageView deng;
 
-    private List<CityItem> cityList;
+    private List<CItem> CnameList;
     private GridView gridView;
     private ImageView imageView;
 
@@ -62,7 +60,6 @@ public class Fragment_Collection extends Fragment implements AdapterView.OnItemC
     private List<Msg> mDatas = new ArrayList<>();
     private MsgAdapter mAdapter;
 
-    private ArrayList<String> C_id,C_Class,C_Voice,C_Name,C_Introduce,C_Pic1,C_Pic2,C_Pic3;
 
     private JSONArray C_DataJSONArray;
     private Handler handler;
@@ -94,37 +91,6 @@ public class Fragment_Collection extends Fragment implements AdapterView.OnItemC
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sp = getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-
-        //创建handler
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                if (msg.what == 0x11) {
-                    JSONObject DataJSONObject = (JSONObject) msg.obj;
-                    C_DataJSONArray = DataJSONObject.getJSONArray("data");
-
-
-                }
-            }
-        };
-
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //FIXME 这里直接更新ui是不行的
-                Message C_message = Message.obtain();
-                //还有其他更新ui方式,runOnUiThread()等
-                try {
-                    C_message.obj = GetData("uni-data-collection");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                C_message.what = 0x11;
-                handler.sendMessage(C_message);
-            }
-        }).start();
     }
 
     @Override
@@ -134,23 +100,7 @@ public class Fragment_Collection extends Fragment implements AdapterView.OnItemC
         View view = inflater.inflate(R.layout.fragment__collection, container, false);
 
         gridView = (GridView) view.findViewById(R.id.grid);
-        /**
-         * 实例化数据数组
-         */
-        C_id = new ArrayList<String>();
-        C_Class = new ArrayList<String>();
-        C_Voice = new ArrayList<String>();
-        C_Name = new ArrayList<String>();
-        C_Introduce = new ArrayList<String>();
-        C_Pic1 = new ArrayList<String>();
-        C_Pic2 = new ArrayList<String>();
-        C_Pic3 = new ArrayList<String>();
 
-        /** 获取数据 */
-        inindate();
-
-        setData();
-        setGridView();
         imageView = (ImageView) view.findViewById(R.id.imageView6);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,35 +122,71 @@ public class Fragment_Collection extends Fragment implements AdapterView.OnItemC
             }
         });
 
-        mLvMsgList = view.findViewById(R.id.id_lv_msgList);
 
-        // 设置纵向数据
-        mDatas.addAll(MsgLab.generateMockList(C_Name,C_Pic1));
-
-        mAdapter = new MsgAdapter(getActivity(), mDatas);
-        mLvMsgList.setAdapter(mAdapter);
-        // 纵向的gridview的item的点击事件
-        mLvMsgList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //创建handler
+        handler = new Handler() {
+            @SuppressLint("HandlerLeak")
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.e("onItemClick", mDatas.get(position).getTitle());
-                Intent intent = new Intent(getActivity(), Fragment_collection_detail.class);
-                intent.putExtra("C_Name", C_Name.get(position));
-                intent.putExtra("C_Voice", C_Voice.get(position));
-                intent.putExtra("C_Introduce", C_Introduce.get(position));
-                intent.putExtra("C_Pic1", C_Pic1.get(position));
-                intent.putExtra("C_Pic2", C_Pic2.get(position));
-                intent.putExtra("C_Pic3", C_Pic3.get(position));
-                startActivity(intent);
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == 0x11) {
+                    JSONObject DataJSONObject = (JSONObject) msg.obj;
+                    C_DataJSONArray = DataJSONObject.getJSONArray("data");
+
+                    setData();
+                    setGridView();
+
+                    mLvMsgList = view.findViewById(R.id.id_lv_msgList);
+
+                    // 设置纵向数据
+                    //mDatas.addAll(MsgLab.generateMockList(C_Name,C_Pic1));
+                    mDatas.addAll(MsgLab.generateMockList(C_DataJSONArray));
+
+                    mAdapter = new MsgAdapter(getActivity(), mDatas);
+                    mLvMsgList.setAdapter(mAdapter);
+                    // 纵向的gridview的item的点击事件
+                    mLvMsgList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Log.e("onItemClick", mDatas.get(position).getTitle());
+                            Intent intent = new Intent(getActivity(), Fragment_collection_detail.class);
+                            intent.putExtra("C_Name",C_DataJSONArray.getJSONObject(position).getString("name"));
+                            intent.putExtra("C_Introduce",C_DataJSONArray.getJSONObject(position).getString("introduction"));
+                            intent.putExtra("C_Voice",C_DataJSONArray.getJSONObject(position).getJSONArray("video").getString(0));
+//                            intent.putExtra("C_Name",C_DataJSONArray.getJSONObject(position).getString("C_Name"));
+//                            intent.putExtra("C_Name",C_DataJSONArray.getJSONObject(position).getString("C_Name"));
+//                            intent.putExtra("C_Name",C_DataJSONArray.getJSONObject(position).getString("C_Name"));
+                            intent.putExtra("image",C_DataJSONArray.getJSONObject(position).getJSONArray("image"));
+                            startActivity(intent);
+                        }
+                    });
+                }
             }
-        });
+        };
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //FIXME 这里直接更新ui是不行的
+                Message C_message = Message.obtain();
+                //还有其他更新ui方式,runOnUiThread()等
+                try {
+                    C_message.obj = GetData("uni-data-collection");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                C_message.what = 0x11;
+                handler.sendMessage(C_message);
+            }
+        }).start();
 
         return view;
     }
 
     /**设置横向GirdView参数，绑定数据*/
     private void setGridView() {
-        int size = cityList.size();
+        int size = CnameList.size();
         int length = 100;
         DisplayMetrics dm = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -216,7 +202,7 @@ public class Fragment_Collection extends Fragment implements AdapterView.OnItemC
         gridView.setNumColumns(size); // 设置列数量=列表集合数
 
         GridViewAdapter adapter = new GridViewAdapter(getActivity().getApplicationContext(),
-                cityList);
+                CnameList);
         gridView.setAdapter(adapter);
         // 横向的gridview的item的点击事件
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -224,19 +210,21 @@ public class Fragment_Collection extends Fragment implements AdapterView.OnItemC
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     // 设置纵向数据
-                    inindate2(cityList.get(position).getCityName(),position);
                     mDatas.clear();
-                    mDatas.addAll(MsgLab.generateMockList(C_Name, C_Pic1));
+                    mDatas.addAll(MsgLab.generateMockList(C_DataJSONArray));
                     mAdapter.notifyDataSetChanged();
-                    Log.e("onItemClick", cityList.get(position).getCityName());
-
+                    Log.e("onItemClick", CnameList.get(position).getCName());
+                    System.out.println(position);
                 } else {
-                    // 设置纵向数据
-                    inindate2(cityList.get(position).getCityName(),position);
-                    mDatas.clear();
-                    mDatas.addAll(MsgLab.generateMockList(C_Name, C_Pic1));
-                    mAdapter.notifyDataSetChanged();
-                    Log.e("onItemClick", cityList.get(position).getCityName());
+                    try {
+                        mDatas.clear();
+                        mDatas.addAll(MsgLab.generateMockList(UnicloudApi.GetDatabycondition(sp.getString("token",""),"uni-data-collection",String.valueOf(position)).getJSONArray("data")));
+                        mAdapter.notifyDataSetChanged();
+                        Log.e("onItemClick", CnameList.get(position).getCName());
+                        System.out.println(position);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -246,8 +234,8 @@ public class Fragment_Collection extends Fragment implements AdapterView.OnItemC
     /**横向GirdView 数据适配器*/
     public class GridViewAdapter extends BaseAdapter {
         Context context;
-        List<CityItem> list;
-        public GridViewAdapter(Context _context, List<CityItem> _list) {
+        List<CItem> list;
+        public GridViewAdapter(Context _context, List<CItem> _list) {
             this.list = _list;
             this.context = _context;
         }
@@ -272,21 +260,21 @@ public class Fragment_Collection extends Fragment implements AdapterView.OnItemC
             LayoutInflater layoutInflater = LayoutInflater.from(context);
             convertView = layoutInflater.inflate(R.layout.hroizontal_list_item, null);
             TextView tvCity = (TextView) convertView.findViewById(R.id.tvCity);
-            CityItem city = list.get(position);
-            tvCity.setText(city.getCityName());
+            CItem city = list.get(position);
+            tvCity.setText(city.getCName());
             return convertView;
         }
     }
     // 横向数据
-    public class CityItem {
-        private String cityName;
+    public class CItem {
+        private String cName;
 
-        public String getCityName() {
-            return cityName;
+        public String getCName() {
+            return cName;
         }
 
-        public void setCityName(String cityName) {
-            this.cityName = cityName;
+        public void setCName(String cName) {
+            this.cName = cName;
         }
 
     }
@@ -296,195 +284,48 @@ public class Fragment_Collection extends Fragment implements AdapterView.OnItemC
     }
     /**横向设置数据*/
     private void setData() {
-        cityList = new ArrayList<CityItem>();
-        CityItem item = new CityItem();
-        item.setCityName("全部");
-        cityList.add(item);
-        item = new CityItem();
-        item.setCityName("古籍图书");
-        cityList.add(item);
-        item = new CityItem();
-        item.setCityName("文件宣传品");
-        cityList.add(item);
-        item = new CityItem();
-        item.setCityName("名人遗物");
-        cityList.add(item);
-        item = new CityItem();
-        item.setCityName("书法绘画");
-        cityList.add(item);
-        item = new CityItem();
-        item.setCityName("家具");
-        cityList.add(item);
-        item = new CityItem();
-        item.setCityName("武器弹药");
-        cityList.add(item);
-        item = new CityItem();
-        item.setCityName("玺印符牌");
-        cityList.add(item);
-        item = new CityItem();
-        item.setCityName("档案文书");
-        cityList.add(item);
-        item = new CityItem();
-        item.setCityName("钱币");
-        cityList.add(item);
-        item = new CityItem();
-        item.setCityName("度量衡器");
-        cityList.add(item);
-        item = new CityItem();
-        item.setCityName("织绣");
-        cityList.add(item);
-        cityList.addAll(cityList);
+        CnameList = new ArrayList<CItem>();
+        CItem item = new CItem();
+        item.setCName("全部");
+        CnameList.add(item);
+        item = new CItem();
+        item.setCName("古籍图书");
+        CnameList.add(item);
+        item = new CItem();
+        item.setCName("文件宣传品");
+        CnameList.add(item);
+        item = new CItem();
+        item.setCName("名人遗物");
+        CnameList.add(item);
+        item = new CItem();
+        item.setCName("书法绘画");
+        CnameList.add(item);
+        item = new CItem();
+        item.setCName("家具");
+        CnameList.add(item);
+        item = new CItem();
+        item.setCName("武器弹药");
+        CnameList.add(item);
+        item = new CItem();
+        item.setCName("玺印符牌");
+        CnameList.add(item);
+        item = new CItem();
+        item.setCName("档案文书");
+        CnameList.add(item);
+        item = new CItem();
+        item.setCName("钱币");
+        CnameList.add(item);
+        item = new CItem();
+        item.setCName("度量衡器");
+        CnameList.add(item);
+        item = new CItem();
+        item.setCName("织绣");
+        CnameList.add(item);
+        CnameList.addAll(CnameList);
     }
 
     private JSONObject GetData(String Table) throws Exception {
         return UnicloudApi.GetData(sp.getString("token",""),Table);
-    }
-
-    private void inindate(){
-        InitBmob.Initbmob();
-        String re,id;
-        String Class,Voice,Name,Introduce,Pic1,Pic2,Pic3;;
-        re = Bmob.findAll("Collection");
-        JSONObject jsonObject = JSON.parseObject(re);
-        //获取当前嵌套下的属性
-        String status = jsonObject.getString("results");
-        if (status!=null){
-            //获取嵌套中的json串,细心观察 content为json数组，里面可放多个json对象
-            JSONArray jsonArray = jsonObject.getJSONArray("results");
-            System.out.println(jsonArray);
-
-            for(int i =0;i < jsonArray.size(); i++) {
-                JSONObject jsonFirst = jsonArray.getJSONObject(i);
-
-                //取出这个json中的值
-                id = jsonFirst.getString("id");
-                if (id != null) {
-                    C_id.add(id);
-                }
-                //取出这个json中的值
-                Class = jsonFirst.getString("Class");
-                if (Class != null) {
-                    C_Class.add(Class);
-                }
-                //取出这个json中的值
-                Voice = jsonFirst.getString("Voice");
-                if (Voice != null) {
-
-                    C_Voice.add(Voice);
-                }
-                //取出这个json中的值
-                Name = jsonFirst.getString("Name");
-                if (Name != null) {
-
-                    C_Name.add(Name);
-                }
-                //取出这个json中的值
-                Introduce = jsonFirst.getString("Introduce");
-                if (Introduce != null) {
-
-                    C_Introduce.add(Introduce);
-                }
-                //取出这个json中的值
-                Pic1 = jsonFirst.getString("Pic1");
-                if (Pic1 != null) {
-
-                    C_Pic1.add(Pic1);
-                }
-                //取出这个json中的值
-                Pic2 = jsonFirst.getString("Pic2");
-                if (Pic2 != null) {
-
-                    C_Pic2.add(Pic2);
-                }
-                //取出这个json中的值
-                Pic3 = jsonFirst.getString("Pic3");
-                if (Pic3 != null) {
-
-                    C_Pic3.add(Pic3);
-                }
-            }
-        }
-    }
-    private void inindate2(String where,int postion){
-        C_id.clear();
-        C_Class.clear();
-        C_Voice.clear();
-        C_Name.clear();
-        C_Introduce.clear();
-        C_Pic1.clear();
-        C_Pic2.clear();
-        C_Pic3.clear();
-
-        if (postion == 0){
-            inindate();
-        }else{
-            InitBmob.Initbmob();
-            String re,id;
-            String Class,Voice,Name,Introduce,Pic1,Pic2,Pic3;;
-            String json = "{"+'"'+"Class"+'"'+":";
-            String JSon = '"'+where+'"'+"}";
-
-            re = Bmob.findAll("Collection",json+JSon);
-            JSONObject jsonObject = JSON.parseObject(re);
-            //获取当前嵌套下的属性
-            String status = jsonObject.getString("results");
-            if (status!=null){
-                //获取嵌套中的json串,细心观察 content为json数组，里面可放多个json对象
-                JSONArray jsonArray = jsonObject.getJSONArray("results");
-                System.out.println(jsonArray);
-
-                for(int i =0;i < jsonArray.size(); i++) {
-                    JSONObject jsonFirst = jsonArray.getJSONObject(i);
-
-                    //取出这个json中的值
-                    id = jsonFirst.getString("id");
-                    if (id != null) {
-                        C_id.add(id);
-                    }
-                    //取出这个json中的值
-                    Class = jsonFirst.getString("Class");
-                    if (Class != null) {
-                        C_Class.add(Class);
-                    }
-                    //取出这个json中的值
-                    Voice = jsonFirst.getString("Voice");
-                    if (Voice != null) {
-
-                        C_Voice.add(Voice);
-                    }
-                    //取出这个json中的值
-                    Name = jsonFirst.getString("Name");
-                    if (Name != null) {
-
-                        C_Name.add(Name);
-                    }
-                    //取出这个json中的值
-                    Introduce = jsonFirst.getString("Introduce");
-                    if (Introduce != null) {
-
-                        C_Introduce.add(Introduce);
-                    }
-                    //取出这个json中的值
-                    Pic1 = jsonFirst.getString("Pic1");
-                    if (Pic1 != null) {
-
-                        C_Pic1.add(Pic1);
-                    }
-                    //取出这个json中的值
-                    Pic2 = jsonFirst.getString("Pic2");
-                    if (Pic2 != null) {
-
-                        C_Pic2.add(Pic2);
-                    }
-                    //取出这个json中的值
-                    Pic3 = jsonFirst.getString("Pic3");
-                    if (Pic3 != null) {
-
-                        C_Pic3.add(Pic3);
-                    }
-                }
-            }
-        }
     }
 
 }

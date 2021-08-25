@@ -28,6 +28,7 @@ public class UnicloudApi {
     private static final String URL_data_Add = URL_Main + "/http/adddata?";
     private static final String URL_data_Delete = URL_Main + "/http/dedata?";
     private static final String URL_data_Get = URL_Main + "/http/getdata?";
+    private static final String URL_data_Getbycondition = URL_Main + "/http/getdatabycondition?";
     private static final String URL_data_Update = URL_Main + "/http/updata?";
 
     private static final String URL_file_Upload = URL_Main + "/http/uploadfile?";
@@ -172,6 +173,25 @@ public class UnicloudApi {
      */
     public static JSONObject GetData(String Token, String Table) throws Exception {
         String Url = URL_data_Get +"token="+Token+"&DbName="+Table;
+        JSONObject Json = URL_Post(Url);
+        String code = Json.getString("affectedDocs");
+        if (Integer.parseInt(code) > 0){
+            return Json;
+        }else {
+            return Json;
+        }
+
+    }
+
+    /**
+     * 获取数据
+     * @param Token 验证码
+     * @param Table 表名
+     * @param condition
+     * @return JSON格式结果
+     */
+    public static JSONObject GetDatabycondition(String Token, String Table ,String condition) throws Exception {
+        String Url = URL_data_Getbycondition +"token="+Token+"&DbName="+Table +"&condition="+condition;
         JSONObject Json = URL_Post(Url);
         String code = Json.getString("affectedDocs");
         if (Integer.parseInt(code) > 0){
