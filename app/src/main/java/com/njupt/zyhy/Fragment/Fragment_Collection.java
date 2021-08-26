@@ -149,14 +149,19 @@ public class Fragment_Collection extends Fragment implements AdapterView.OnItemC
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             Log.e("onItemClick", mDatas.get(position).getTitle());
+                            //可以把要传递的参数放到一个bundle里传递过去，bumdle可以看做一个特殊的map。
+                            Bundle bundle = new Bundle() ;
+
                             Intent intent = new Intent(getActivity(), Fragment_collection_detail.class);
-                            intent.putExtra("C_Name",C_DataJSONArray.getJSONObject(position).getString("name"));
-                            intent.putExtra("C_Introduce",C_DataJSONArray.getJSONObject(position).getString("introduction"));
-                            intent.putExtra("C_Voice",C_DataJSONArray.getJSONObject(position).getJSONArray("video").getString(0));
-//                            intent.putExtra("C_Name",C_DataJSONArray.getJSONObject(position).getString("C_Name"));
-//                            intent.putExtra("C_Name",C_DataJSONArray.getJSONObject(position).getString("C_Name"));
-//                            intent.putExtra("C_Name",C_DataJSONArray.getJSONObject(position).getString("C_Name"));
-                            intent.putExtra("image",C_DataJSONArray.getJSONObject(position).getJSONArray("image"));
+                            JSONObject Data = C_DataJSONArray.getJSONObject(position);
+                            bundle.putString("C_Name",Data.getString("name"));
+                            bundle.putString("C_Introduce",Data.getString("introduction"));
+                            bundle.putString("C_Voice",Data.getJSONArray("video").getString(0));
+                            bundle.putString("C_Pic1",Data.getJSONArray("image").getString(0));
+                            bundle.putString("C_Pic2",Data.getJSONArray("image").getString(1));
+                            bundle.putString("C_Pic3",Data.getJSONArray("image").getString(2));
+                            intent.putExtras(bundle) ;
+
                             startActivity(intent);
                         }
                     });

@@ -17,8 +17,6 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
-
-import com.alibaba.fastjson.JSONArray;
 import com.lzj.gallery.library.views.BannerViewPager;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,19 +45,11 @@ public class Fragment_collection_detail extends Activity implements View.OnClick
          * 获取数据
          */
         Intent intent=getIntent();
-
-        String C_Name=intent.getStringExtra("C_Name");
         C_Voice=intent.getStringExtra("C_Voice");
-        String C_Introduce=intent.getStringExtra("C_Introduce");
-        String C_Pic1=intent.getStringExtra("C_Pic1");
-        String C_Pic2=intent.getStringExtra("C_Pic2");
-        String C_Pic3=intent.getStringExtra("C_Pic3");
-
-
         urlList_home = new ArrayList<>();
-        urlList_home.add(C_Pic1);
-        urlList_home.add(C_Pic2);
-        urlList_home.add(C_Pic3);
+        urlList_home.add(intent.getStringExtra("C_Pic1"));
+        urlList_home.add(intent.getStringExtra("C_Pic2"));
+        urlList_home.add(intent.getStringExtra("C_Pic3"));
 
         banner.initBanner(urlList_home, false)//关闭3D画廊效果
                 .addPageMargin(0, 0)//无间距
@@ -78,8 +68,8 @@ public class Fragment_collection_detail extends Activity implements View.OnClick
         textView_Introduce = (TextView) findViewById(R.id.Introduce);
         back = (ImageView) findViewById(R.id.wenwu_back);
 
-        textView_name.setText(C_Name);
-        textView_Introduce.setText(C_Introduce);
+        textView_name.setText(intent.getStringExtra("C_Name"));
+        textView_Introduce.setText(intent.getStringExtra("C_Introduce"));
         back.setOnClickListener(this);
         initViews();
 
