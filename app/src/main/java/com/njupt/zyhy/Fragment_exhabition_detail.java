@@ -49,23 +49,17 @@ public class Fragment_exhabition_detail extends Activity implements View.OnClick
          * 获取数据
          */
         Intent intent=getIntent();
-        String Z_Title=intent.getStringExtra("Z_Title");
-        String Z_Text=intent.getStringExtra("Z_Text");
-        String Z_Pic1=intent.getStringExtra("Z_Pic1");
-        String Z_Pic2=intent.getStringExtra("Z_Pic2");
-        String Z_Pic3=intent.getStringExtra("Z_Pic3");
-        String Z_Pic4=intent.getStringExtra("Z_Pic4");
 
         back = (ImageView) findViewById(R.id.zhanlan_back);
         back.setOnClickListener(this);
 
         textView1 =(TextView) findViewById(R.id.text_zhanlan_1);
-        textView1.setText(Z_Title);
+        textView1.setText(intent.getStringExtra("Z_Title"));
 
         expandView = findViewById(R.id.expand_view);
         layoutView = findViewById(R.id.description_layout);
         textView2 =(TextView) findViewById(R.id.text_zhanlan_2);
-        textView2.setText("\u3000\u3000"+Z_Text);
+        textView2.setText("\u3000\u3000"+intent.getStringExtra("Z_Text"));
         //descriptionView设置默认显示高度
         textView2.setHeight(textView2.getLineHeight() * maxDescripLine);
         //根据高度来判断是否需要再点击展开
@@ -78,14 +72,14 @@ public class Fragment_exhabition_detail extends Activity implements View.OnClick
 
         imageView1 =(ImageView) findViewById(R.id.image_zhanlan);
 
-        imageView1.setImageBitmap(GetHttpBitmap.getHttpBitmap(Z_Pic1));
+        imageView1.setImageBitmap(GetHttpBitmap.getHttpBitmap(intent.getStringExtra("Z_Pic1")));
 
         banner = (BannerViewPager) findViewById(R.id.banner);
 
         urlList = new ArrayList<>();
-        urlList.add(Z_Pic2);
-        urlList.add(Z_Pic3);
-        urlList.add(Z_Pic4);
+        urlList.add(intent.getStringExtra("Z_Pic2"));
+        urlList.add(intent.getStringExtra("Z_Pic3"));
+        urlList.add(intent.getStringExtra("Z_Pic4"));
         //轮播图加载
         banner.initBanner(urlList, true)//关闭3D画廊效果
                 .addPageMargin(10, 20)//无间距

@@ -1,22 +1,22 @@
 package com.njupt.zyhy.bean;
 
 public class HistoryBean {
-    private String time;
+    private String name;
     private String pic;
     private String title;
 
-    public HistoryBean(String time, String pic, String title) {
-        this.time = time;
+    public HistoryBean(String name, String pic, String title) {
+        this.name = name;
         this.pic = pic;
         this.title = title;
     }
 
     public String getTime() {
-        return time;
+        return name;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setTime(String name) {
+        this.name = name;
     }
 
     public String getPic() {

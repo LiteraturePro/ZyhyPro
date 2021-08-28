@@ -101,17 +101,11 @@
             android:configChanges="orientation|keyboardHidden|screenSize|navigation"
             android:theme="@android:style/Theme.NoTitleBar" />
         <activity
-            android:name="cn.bmob.v3.update.UpdateDialogActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity
             android:name="com.mob.tools.MobUIShell"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
-        <provider
-            android:name="cn.bmob.v3.util.BmobContentProvider"
-            android:authorities="com.njupt.zyhy.BmobContentProvider" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.njupt.zyhy.fileprovider"

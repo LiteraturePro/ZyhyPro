@@ -72,6 +72,7 @@
                     android:paddingLeft="5sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/confirmdialog_news"
                     android:textSize="12sp"
                     android:text="\u3000\u3000遵义会议纪念馆（遵义会议研究中心）是为纪念中国共产党历史上具有伟大历史意义的遵义会议而建立的，是中华人民共和国成立后最早建立的21个革命纪念馆之一。
 \n\u3000\u3000经市编委会研究并报市委常委会批准，同意设立遵义会议研究中心，与遵义会议纪念馆合署办公，实行“两块牌子、一个机构”的管理体制。遵义会议研究中心主要负责遵义会议及长征文化的研究宣教工作。"/>
@@ -100,15 +101,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
-                    <com.njupt.zyhy.bean.SideslipListView_lost
-                        android:id="@+id/lost_sideslipListView"
+                    <com.njupt.zyhy.bean.SideslipListView_news
+                        android:id="@+id/edu_sideslipListView"
                         android:scrollingCache="false"
                         android:cacheColorHint="#00000000"
                         android:divider="#fff"
                         android:dividerHeight="3dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-                    </com.njupt.zyhy.bean.SideslipListView_lost>
+                    </com.njupt.zyhy.bean.SideslipListView_news>
 
                 </LinearLayout>
 

@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -16,9 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -40,10 +35,7 @@ import com.njupt.zyhy.Fragment_guide_map;
 import com.njupt.zyhy.Fragment_guide_webview;
 import com.njupt.zyhy.R;
 import com.njupt.zyhy.ScanActivity;
-import com.njupt.zyhy.bean.InitBmob;
-import com.njupt.zyhy.bmob.restapi.Bmob;
 import com.njupt.zyhy.unicloud.UnicloudApi;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,20 +52,16 @@ public class Fragment_Home extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private ArrayList<String> C_id,C_Class,C_Voice,C_Name,C_Introduce,C_Pic1,C_Pic2,C_Pic3;
-    private ArrayList<String> Z_Title,Z_Subtitle,Z_Text,Z_Pic1,Z_Pic2,Z_Pic3,Z_Pic4;
-
 
     private JSONArray C_DataJSONArray;
     private JSONArray Z_DataJSONArray;
     private Handler handler;
     private SharedPreferences sp;
 
-    BannerViewPager banner_1,banner_2,banner_3;
-    List<String> urlList_wenwu,urlList_book,urlList_home;
-    ImageView imageView,scan_imageView,Seach_imageView;
-    CircleImageView CircleImageView1,CircleImageView2,CircleImageView3,CircleImageView4,CircleImageView5,CircleImageView6,CircleImageView7,CircleImageView8;
-
+    private BannerViewPager banner_1,banner_2,banner_3;
+    private List<String> urlList_wenwu,urlList_book,urlList_home;
+    private ImageView imageView,scan_imageView,Seach_imageView;
+    private CircleImageView CircleImageView1,CircleImageView2,CircleImageView3,CircleImageView4,CircleImageView5,CircleImageView6,CircleImageView7,CircleImageView8;
 
     private String mParam1;
     private String mParam2;
@@ -101,58 +89,28 @@ public class Fragment_Home extends Fragment {
 
         sp = getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
 
-        //创建handler
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                if (msg.what == 0x11) {
-                    //String info = (String) msg.obj;
-                    JSONObject DataJSONObject = (JSONObject) msg.obj;
-                    C_DataJSONArray = DataJSONObject.getJSONArray("data");
-                    System.out.println(C_DataJSONArray.toString());
-
-                }else{
-                    JSONObject DataJSONObject = (JSONObject) msg.obj;
-                    Z_DataJSONArray = DataJSONObject.getJSONArray("data");
-                    System.out.println(Z_DataJSONArray.toString());
-                }
-            }
-        };
-
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //FIXME 这里直接更新ui是不行的
-                Message C_message = Message.obtain();
-                Message Z_message = Message.obtain();
-                //还有其他更新ui方式,runOnUiThread()等
-                try {
-                    C_message.obj = GetData("uni-data-collection");
-                    Z_message.obj = GetData("uni-data-exhibit");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                C_message.what = 0x11;
-                Z_message.what = 0x12;
-                handler.sendMessage(Z_message);
-                handler.sendMessage(C_message);
-            }
-        }).start();
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment__home, container, false);
+        View view = inflater.inflate(R.layout.fragment__home, container, false);
+
+        return view;
+
     }
     @Override
     public void onActivityCreated(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-
+        try {
+            JSONObject DataJSONObject = GetData("uni-data-collection");
+            C_DataJSONArray = DataJSONObject.getJSONArray("data");
+            JSONObject DataJSONObject2 = GetData("uni-data-exhibit");
+            Z_DataJSONArray = DataJSONObject2.getJSONArray("data");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         /**
          * 轮播图初始化
          */
@@ -165,44 +123,22 @@ public class Fragment_Home extends Fragment {
         imageView = (ImageView) getActivity().findViewById(R.id.ivMsg);
         scan_imageView = (ImageView) getActivity().findViewById(R.id.ivqr);
         Seach_imageView = (ImageView) getActivity().findViewById(R.id.ivSearch);
-        /**
-         * 实例化藏品数据数组
-         */
-        C_id = new ArrayList<String>();
-        C_Class = new ArrayList<String>();
-        C_Voice = new ArrayList<String>();
-        C_Name = new ArrayList<String>();
-        C_Introduce = new ArrayList<String>();
-        C_Pic1 = new ArrayList<String>();
-        C_Pic2 = new ArrayList<String>();
-        C_Pic3 = new ArrayList<String>();
-        /**
-         * 实例化展览数据数组
-         */
-        Z_Title  = new ArrayList<String>();
-        Z_Subtitle  = new ArrayList<String>();
-        Z_Text  = new ArrayList<String>();
-        Z_Pic1 = new ArrayList<String>();
-        Z_Pic2 = new ArrayList<String>();
-        Z_Pic3 = new ArrayList<String>();
-        Z_Pic4 = new ArrayList<String>();
+
         /**
          * 获取数据
          */
-        mParam2 = inindate2();
-        mParam1 = inindate();
         urlList_home = new ArrayList<>();
         urlList_home.add("http://bmob.wxiou.cn/2021/06/02/bac9eb2c401894e580853d35f2c6d382.jpg");
         urlList_home.add("http://bmob.wxiou.cn/2021/06/02/dc5963db402a50b780c7f327d5831154.jpg");
         urlList_home.add("http://bmob.wxiou.cn/2021/06/02/4830727f40137b98807e4eaa82e5c13f.jpg");
 
         urlList_book = new ArrayList<>();
-        for(int i = 0; i < Z_Pic1.size(); i++){
-            urlList_book.add(Z_Pic1.get(i));
+        for(int i = 0; i < Z_DataJSONArray.size(); i++){
+            urlList_book.add(Z_DataJSONArray.getJSONObject(i).getJSONArray("image").getString(0));
         }
         urlList_wenwu = new ArrayList<>();
-        for(int i = 0; i < C_Pic1.size(); i++){
-            urlList_wenwu.add(C_Pic2.get(i));
+        for(int i = 0; i < C_DataJSONArray.size(); i++){
+            urlList_wenwu.add(C_DataJSONArray.getJSONObject(i).getJSONArray("image").getString(1));
         }
         //轮播图加载
         banner_1.initBanner(urlList_book, false)//关闭3D画廊效果
@@ -215,14 +151,15 @@ public class Fragment_Home extends Fragment {
                 .addBannerListener(new BannerViewPager.OnClickBannerListener() {
                     @Override
                     public void onBannerClick(int position) {
+                        JSONObject OneDate = Z_DataJSONArray.getJSONObject(position);
                         Intent intent = new Intent(getActivity(), Fragment_exhabition_detail.class);
-                        intent.putExtra("Z_Title", Z_Title.get(position));
-                        intent.putExtra("Z_Subtitle", Z_Subtitle.get(position));
-                        intent.putExtra("Z_Text", Z_Text.get(position));
-                        intent.putExtra("Z_Pic1", Z_Pic1.get(position));
-                        intent.putExtra("Z_Pic2", Z_Pic2.get(position));
-                        intent.putExtra("Z_Pic3", Z_Pic3.get(position));
-                        intent.putExtra("Z_Pic4", Z_Pic4.get(position));
+                        intent.putExtra("Z_Title", OneDate.getString("title"));
+                        intent.putExtra("Z_Subtitle", OneDate.getString("describe"));
+                        intent.putExtra("Z_Text", OneDate.getString("text"));
+                        intent.putExtra("Z_Pic1", OneDate.getJSONArray("image").getString(0));
+                        intent.putExtra("Z_Pic2", OneDate.getJSONArray("image").getString(1));
+                        intent.putExtra("Z_Pic3", OneDate.getJSONArray("image").getString(2));
+                        intent.putExtra("Z_Pic4", OneDate.getJSONArray("image").getString(3));
                         startActivity(intent);
                     }
                 });
@@ -236,13 +173,14 @@ public class Fragment_Home extends Fragment {
                 .addBannerListener(new BannerViewPager.OnClickBannerListener() {
                     @Override
                     public void onBannerClick(int position) {
+                        JSONObject OneDate = C_DataJSONArray.getJSONObject(position);
                         Intent intent = new Intent(getActivity(), Fragment_collection_detail.class);
-                        intent.putExtra("C_Name", C_Name.get(position));
-                        intent.putExtra("C_Voice", C_Voice.get(position));
-                        intent.putExtra("C_Introduce", C_Introduce.get(position));
-                        intent.putExtra("C_Pic1", C_Pic1.get(position));
-                        intent.putExtra("C_Pic2", C_Pic2.get(position));
-                        intent.putExtra("C_Pic3", C_Pic3.get(position));
+                        intent.putExtra("C_Name",OneDate.getString("name"));
+                        intent.putExtra("C_Introduce",OneDate.getString("introduction"));
+                        intent.putExtra("C_Voice",OneDate.getJSONArray("video").getString(0));
+                        intent.putExtra("C_Pic1",OneDate.getJSONArray("image").getString(0));
+                        intent.putExtra("C_Pic2",OneDate.getJSONArray("image").getString(1));
+                        intent.putExtra("C_Pic3",OneDate.getJSONArray("image").getString(2));
                         startActivity(intent);
                     }
                 });
@@ -348,9 +286,7 @@ public class Fragment_Home extends Fragment {
         CircleImageView5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(getActivity(), Fragment_Home_inform.class);
-                intent.putExtra("inform", Z_Subtitle);
                 startActivity(intent);
             }
         });
@@ -422,143 +358,9 @@ public class Fragment_Home extends Fragment {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-    private String inindate(){
-        InitBmob.Initbmob();
-        String re,id;
-        String Class,Voice,Name,Introduce,Pic1,Pic2,Pic3;;
-        re = Bmob.findAll("Collection");
-        JSONObject jsonObject = JSON.parseObject(re);
-        //获取当前嵌套下的属性
-        String status = jsonObject.getString("results");
-        if (status!=null){
-            //获取嵌套中的json串,细心观察 content为json数组，里面可放多个json对象
-            JSONArray jsonArray = jsonObject.getJSONArray("results");
-            System.out.println(jsonArray);
-
-            for(int i =0;i < jsonArray.size(); i++) {
-                JSONObject jsonFirst = jsonArray.getJSONObject(i);
-
-                //取出这个json中的值
-                id = jsonFirst.getString("id");
-                if (id != null) {
-                    C_id.add(id);
-                }
-                //取出这个json中的值
-                Class = jsonFirst.getString("Class");
-                if (Class != null) {
-                    C_Class.add(Class);
-                }
-                //取出这个json中的值
-                Voice = jsonFirst.getString("Voice");
-                if (Voice != null) {
-
-                    C_Voice.add(Voice);
-                }
-                //取出这个json中的值
-                Name = jsonFirst.getString("Name");
-                if (Name != null) {
-
-                    C_Name.add(Name);
-                }
-                //取出这个json中的值
-                Introduce = jsonFirst.getString("Introduce");
-                if (Introduce != null) {
-
-                    C_Introduce.add(Introduce);
-                }
-                //取出这个json中的值
-                Pic1 = jsonFirst.getString("Pic1");
-                if (Pic1 != null) {
-
-                    C_Pic1.add(Pic1);
-                }
-                //取出这个json中的值
-                Pic2 = jsonFirst.getString("Pic2");
-                if (Pic2 != null) {
-
-                    C_Pic2.add(Pic2);
-                }
-                //取出这个json中的值
-                Pic3 = jsonFirst.getString("Pic3");
-                if (Pic3 != null) {
-
-                    C_Pic3.add(Pic3);
-                }
-            }
-        }
-        return re;
-    }
-    private String inindate2(){
-        InitBmob.Initbmob();
-        String re;
-        String Title,Subtitle,Text,Pic1,Pic2,Pic3,Pic4;
-        re = Bmob.findAll("Exhibit");
-        JSONObject jsonObject = JSON.parseObject(re);
-        //获取当前嵌套下的属性
-        String status = jsonObject.getString("results");
-        if (status!=null){
-            //获取嵌套中的json串,细心观察 content为json数组，里面可放多个json对象
-            JSONArray jsonArray = jsonObject.getJSONArray("results");
-            System.out.println(jsonArray);
-
-            for(int i =0;i < jsonArray.size(); i++) {
-                JSONObject jsonFirst = jsonArray.getJSONObject(i);
-
-                //取出这个json中的值
-                Title = jsonFirst.getString("Title");
-                if (Title != null) {
-                    Z_Title.add(Title);
-                }
-                //取出这个json中的值
-                Subtitle = jsonFirst.getString("Subtitle");
-                if (Subtitle != null) {
-                    Z_Subtitle.add(Subtitle);
-                }
-                //取出这个json中的值
-                Text = jsonFirst.getString("Text");
-                if (Text != null) {
-                    Z_Text.add(Text);
-                }
-                //取出这个json中的值
-                Pic1 = jsonFirst.getString("Pic1");
-                if (Pic1 != null) {
-                    Z_Pic1.add(Pic1);
-                }
-                //取出这个json中的值
-                Pic2 = jsonFirst.getString("Pic2");
-                if (Pic2 != null) {
-                    Z_Pic2.add(Pic2);
-                }
-                //取出这个json中的值
-                Pic3 = jsonFirst.getString("Pic3");
-                if (Pic3 != null) {
-                    Z_Pic3.add(Pic3);
-                }
-                //取出这个json中的值
-                Pic4 = jsonFirst.getString("Pic4");
-                if (Pic4 != null) {
-                    Z_Pic4.add(Pic4);
-                }
-            }
-        }
-        return re;
-    }
-
 
     private JSONObject GetData(String Table) throws Exception {
         return UnicloudApi.GetData(sp.getString("token",""),Table);
     }
-
-    /**
-     * @version 1.0
-     * @param msg 打印信息
-     */
-    private void showToast(String msg) {
-
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-    }
-
-
-
 
 }

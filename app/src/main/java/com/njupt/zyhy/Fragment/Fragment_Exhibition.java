@@ -11,7 +11,6 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -20,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dogecloud.support.DogeInclude;
@@ -32,10 +30,7 @@ import com.njupt.zyhy.Fragment_exhabition_detail;
 import com.njupt.zyhy.R;
 import com.njupt.zyhy.bean.GetHttpBitmap;
 import com.njupt.zyhy.bean.HistoryBean;
-import com.njupt.zyhy.bean.InitBmob;
-import com.njupt.zyhy.bmob.restapi.Bmob;
 import com.njupt.zyhy.unicloud.UnicloudApi;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,8 +52,6 @@ public class Fragment_Exhibition extends Fragment {
 
     private RecyclerView rv;
     private List<HistoryBean> historyList= new ArrayList<>();
-
-    private ArrayList<String> Z_Title,Z_Subtitle,Z_Text,Z_Pic1,Z_Pic2,Z_Pic3,Z_Pic4;
 
     private JSONArray Z_DataJSONArray;
     private Handler handler;
@@ -94,39 +87,6 @@ public class Fragment_Exhibition extends Fragment {
 
         sp = getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
 
-        //创建handler
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                if (msg.what == 0x11) {
-                    JSONObject DataJSONObject = (JSONObject) msg.obj;
-                    Z_DataJSONArray = DataJSONObject.getJSONArray("data");
-                    System.out.println(Z_DataJSONArray.toString());
-
-                }
-            }
-        };
-
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //FIXME 这里直接更新ui是不行的
-                Message Z_message = Message.obtain();
-                //还有其他更新ui方式,runOnUiThread()等
-                try {
-                    Z_message.obj = GetData("uni-data-exhibit");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                Z_message.what = 0x11;
-                handler.sendMessage(Z_message);
-            }
-        }).start();
-
-
-
     }
 
     @Override
@@ -160,21 +120,45 @@ public class Fragment_Exhibition extends Fragment {
                 .setConfig(DogeInclude.UI_CONFIG_FULLSCREENBTN, String.valueOf(1))
                 .Init();
 
-        // 初始化数据
-        Z_Title  = new ArrayList<String>();
-        Z_Subtitle  = new ArrayList<String>();
-        Z_Text  = new ArrayList<String>();
-        Z_Pic1 = new ArrayList<String>();
-        Z_Pic2 = new ArrayList<String>();
-        Z_Pic3 = new ArrayList<String>();
-        Z_Pic4 = new ArrayList<String>();
-        inindate();
         rv= view.findViewById(R.id.main_rv);
-        initData();
-        LinearLayoutManager manager= new LinearLayoutManager(getActivity());
-        rv.setLayoutManager(manager);
-        HistoryAdapter adapter= new HistoryAdapter(historyList);
-        rv.setAdapter(adapter);
+
+        //创建handler
+        handler = new Handler() {
+            @SuppressLint("HandlerLeak")
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == 0x11) {
+                    JSONObject DataJSONObject = (JSONObject) msg.obj;
+                    Z_DataJSONArray = DataJSONObject.getJSONArray("data");
+                    for (int i= 0; i< Z_DataJSONArray.size(); i++){
+                        HistoryBean bean= new HistoryBean(Z_DataJSONArray.getJSONObject(i).getString("title"), Z_DataJSONArray.getJSONObject(i).getJSONArray("image").getString(0), Z_DataJSONArray.getJSONObject(i).getString("describe"));
+                        historyList.add(bean);
+                    }
+                    LinearLayoutManager manager= new LinearLayoutManager(getActivity());
+                    rv.setLayoutManager(manager);
+                    HistoryAdapter adapter= new HistoryAdapter(historyList);
+                    rv.setAdapter(adapter);
+
+                }
+            }
+        };
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //FIXME 这里直接更新ui是不行的
+                Message C_message = Message.obtain();
+                //还有其他更新ui方式,runOnUiThread()等
+                try {
+                    C_message.obj = GetData("uni-data-exhibit");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                C_message.what = 0x11;
+                handler.sendMessage(C_message);
+            }
+        }).start();
 
         return view;
     }
@@ -224,88 +208,26 @@ public class Fragment_Exhibition extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), Fragment_exhabition_detail.class);
-                    intent.putExtra("Z_Title", Z_Title.get(position));
-                    intent.putExtra("Z_Subtitle", Z_Subtitle.get(position));
-                    intent.putExtra("Z_Text", Z_Text.get(position));
-                    intent.putExtra("Z_Pic1", Z_Pic1.get(position));
-                    intent.putExtra("Z_Pic2", Z_Pic2.get(position));
-                    intent.putExtra("Z_Pic3", Z_Pic3.get(position));
-                    intent.putExtra("Z_Pic4", Z_Pic4.get(position));
+                    intent.putExtra("Z_Title", Z_DataJSONArray.getJSONObject(position).getString("title"));
+                    intent.putExtra("Z_Subtitle", Z_DataJSONArray.getJSONObject(position).getString("describe"));
+                    intent.putExtra("Z_Text", Z_DataJSONArray.getJSONObject(position).getString("text"));
+                    intent.putExtra("Z_Pic1", Z_DataJSONArray.getJSONObject(position).getJSONArray("image").getString(0));
+                    intent.putExtra("Z_Pic2", Z_DataJSONArray.getJSONObject(position).getJSONArray("image").getString(1));
+                    intent.putExtra("Z_Pic3", Z_DataJSONArray.getJSONObject(position).getJSONArray("image").getString(2));
+                    intent.putExtra("Z_Pic4", Z_DataJSONArray.getJSONObject(position).getJSONArray("image").getString(3));
                     startActivity(intent);
                 }
             });
 
         }
-
         @Override
         public int getItemCount() {
             return historyList.size();
         }
     }
 
-    private void initData() {
-        for (int i= 0; i< Z_Title.size(); i++){
-            HistoryBean bean= new HistoryBean(Z_Title.get(i), Z_Pic1.get(i), Z_Subtitle.get(i));
-            historyList.add(bean);        }
-    }
-
     private JSONObject GetData(String Table) throws Exception {
         return UnicloudApi.GetData(sp.getString("token",""),Table);
-    }
-
-    private void inindate(){
-        InitBmob.Initbmob();
-        String re;
-        String Title,Subtitle,Text,Pic1,Pic2,Pic3,Pic4;
-        re = Bmob.findAll("Exhibit");
-        JSONObject jsonObject = JSON.parseObject(re);
-        //获取当前嵌套下的属性
-        String status = jsonObject.getString("results");
-        if (status!=null){
-            //获取嵌套中的json串,细心观察 content为json数组，里面可放多个json对象
-            JSONArray jsonArray = jsonObject.getJSONArray("results");
-            System.out.println(jsonArray);
-
-            for(int i =0;i < jsonArray.size(); i++) {
-                JSONObject jsonFirst = jsonArray.getJSONObject(i);
-
-                //取出这个json中的值
-                Title = jsonFirst.getString("Title");
-                if (Title != null) {
-                    Z_Title.add(Title);
-                }
-                //取出这个json中的值
-                Subtitle = jsonFirst.getString("Subtitle");
-                if (Subtitle != null) {
-                    Z_Subtitle.add(Subtitle);
-                }
-                //取出这个json中的值
-                Text = jsonFirst.getString("Text");
-                if (Text != null) {
-                    Z_Text.add(Text);
-                }
-                //取出这个json中的值
-                Pic1 = jsonFirst.getString("Pic1");
-                if (Pic1 != null) {
-                    Z_Pic1.add(Pic1);
-                }
-                //取出这个json中的值
-                Pic2 = jsonFirst.getString("Pic2");
-                if (Pic2 != null) {
-                    Z_Pic2.add(Pic2);
-                }
-                //取出这个json中的值
-                Pic3 = jsonFirst.getString("Pic3");
-                if (Pic3 != null) {
-                    Z_Pic3.add(Pic3);
-                }
-                //取出这个json中的值
-                Pic4 = jsonFirst.getString("Pic4");
-                if (Pic4 != null) {
-                    Z_Pic4.add(Pic4);
-                }
-            }
-        }
     }
 
     @Override

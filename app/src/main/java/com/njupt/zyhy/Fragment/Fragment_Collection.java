@@ -122,7 +122,6 @@ public class Fragment_Collection extends Fragment implements AdapterView.OnItemC
             }
         });
 
-
         //创建handler
         handler = new Handler() {
             @SuppressLint("HandlerLeak")
