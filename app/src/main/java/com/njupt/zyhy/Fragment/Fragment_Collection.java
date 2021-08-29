@@ -153,8 +153,11 @@ public class Fragment_Collection extends Fragment implements AdapterView.OnItemC
 
                             Intent intent = new Intent(getActivity(), Fragment_collection_detail.class);
                             JSONObject Data = C_DataJSONArray.getJSONObject(position);
+
+                            String Datas = "材质："+Data.getString("texture") +"\n"+"登记号:"+Data.getString("registration_number")+"\n"+"文物级别："+Data.getString("registration_number")+"\n"+"年份："+Data.getString("years")+"\n"+"规格："+Data.getString("size")+"\n";
+
                             bundle.putString("C_Name",Data.getString("name"));
-                            bundle.putString("C_Introduce",Data.getString("introduction"));
+                            bundle.putString("C_Introduce",Datas+"\n"+"\u3000"+Data.getString("introduction"));
                             bundle.putString("C_Voice",Data.getJSONArray("video").getString(0));
                             bundle.putString("C_Pic1",Data.getJSONArray("image").getString(0));
                             bundle.putString("C_Pic2",Data.getJSONArray("image").getString(1));
