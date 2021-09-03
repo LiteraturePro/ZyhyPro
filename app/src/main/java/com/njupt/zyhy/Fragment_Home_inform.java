@@ -1,9 +1,12 @@
 package com.njupt.zyhy;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.njupt.zyhy.unicloud.UnicloudApi;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,33 +28,59 @@ public class Fragment_Home_inform extends Activity implements View.OnClickListen
     private List<String> list = new ArrayList<String>();
     private InformAdapter adapter = null;
     private ArrayList<String> Title;
+    private Handler handler;
+    private SharedPreferences sp;
+
+    private JSONArray DataJSONArray;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        sp = this.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
 
         /**加载xml文件*/
         setContentView(R.layout.fragment_home_inform);
 
-        Intent intent=getIntent();
-        Title = intent.getStringArrayListExtra("inform");
         lv_inform = (ListView)findViewById(R.id.lv_inform);
         back = (ImageView)findViewById(R.id.informback);
         back.setOnClickListener(this);
-        setData(Title);// 给listView设置adapter
-    }
-    private void setData(ArrayList<String> Title) {
-        initData(Title);// 初始化数据
-        adapter = new InformAdapter(list, this );
-        lv_inform.setAdapter(adapter);
+
+        //创建handler
+        handler = new Handler() {
+            @SuppressLint("HandlerLeak")
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == 0x11) {
+                    JSONObject DataJSONObject = (JSONObject) msg.obj;
+                    DataJSONArray = DataJSONObject.getJSONArray("data");
+                    for(int i = 0; i < DataJSONArray.size(); i++){
+                        list.add(DataJSONArray.getJSONObject(i).getString("title"));
+                    }
+                    adapter = new InformAdapter(list, getBaseContext() );
+                    lv_inform.setAdapter(adapter);
+
+                }
+            }
+        };
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //FIXME 这里直接更新ui是不行的
+                Message C_message = Message.obtain();
+                //还有其他更新ui方式,runOnUiThread()等
+                try {
+                    C_message.obj = GetData("uni-data-notice");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                C_message.what = 0x11;
+                handler.sendMessage(C_message);
+            }
+        }).start();
+
     }
 
-    private void initData(ArrayList<String> Title) {
-        for(int i= 0 ; i < Title.size(); i++) {
-            list.add(Title.get(i));
-        }
-
-    }
     public class InformAdapter extends BaseAdapter {
 
         private List<String> list = new ArrayList<String>();
@@ -95,5 +127,8 @@ public class Fragment_Home_inform extends Activity implements View.OnClickListen
             default:
                 break;
         }
+    }
+    private JSONObject GetData(String Table) throws Exception {
+        return UnicloudApi.GetData(sp.getString("token",""),Table);
     }
 }

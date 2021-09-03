@@ -120,6 +120,9 @@ public class Fragment_Me extends Fragment {
         imageView = (NiceImageView) view.findViewById(R.id.headimg);
         textView = (TextView) view.findViewById(R.id.name);
         String uid = sp.getString("id","");
+        imageView.isCircle(true);
+        imageView.isCoverSrc(true);
+
 
         /**
          * 判定用户登录状态

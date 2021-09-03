@@ -45,10 +45,10 @@
             android:layout_height="75.0dip"
             android:layout_marginTop="25.0dip"
             android:src="@drawable/common_img_placeholder_avatar"
-            app:border_color="#FF7F24"
-            app:border_width="1dp"
-            app:inner_border_color="#000fff"
-            app:is_circle="true" />
+            app:border_color="#000"
+            app:border_width="2dp"
+            app:inner_border_color="#000fff" />
+<!--            app:is_circle="true" />-->
 
 
 <!--        <ImageView-->

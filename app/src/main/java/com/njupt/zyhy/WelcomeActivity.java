@@ -1,5 +1,4 @@
 package com.njupt.zyhy;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,12 +9,8 @@ import android.text.TextUtils;
 import androidx.annotation.Nullable;
 import com.mob.MobSDK;
 
-
 public class WelcomeActivity extends Activity {
     private SharedPreferences sp;
-    /**
-     * 跳转判断
-     */
     @Override
     /*** 创建欢迎页面
      * @version 1.0
@@ -32,7 +27,6 @@ public class WelcomeActivity extends Activity {
         // 使用PostDelayed方法，两秒后调用此Runnable对象
         // handler.postDelayed(runnable, 2000);
         // 实际上也就实现了一个2s的一个定时器
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -50,6 +44,6 @@ public class WelcomeActivity extends Activity {
                     finish();
                 }
             }
-        }, 1000);
+        }, 500);
     }
 }

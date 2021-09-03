@@ -2,16 +2,13 @@ package com.njupt.zyhy.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
@@ -90,17 +87,32 @@ public class Fragment_Guide extends Fragment {
         aMap.showIndoorMap(true);
         aMap.setMapType(AMap.MAP_TYPE_NORMAL);
 
-        client = new AMapLocationClient(null);
-        client.setLocationListener(locationListener);
 
-        AMapLocationClientOption option = new AMapLocationClientOption();
-        option.setNeedAddress(true);
-        option.setMockEnable(true);
-        option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);//高精度位置
-        client.setLocationOption(option);
-        client.startLocation();
-        /** 创建定位器 */
-        initAMap(aMap,(float) 27.688412,(float) 106.920726);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //FIXME 这里直接更新ui是不行的
+                //还有其他更新ui方式,runOnUiThread()等
+                try {
+
+                    client = new AMapLocationClient(null);
+                    client.setLocationListener(locationListener);
+
+                    AMapLocationClientOption option = new AMapLocationClientOption();
+                    option.setNeedAddress(true);
+                    option.setMockEnable(true);
+                    option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);//高精度位置
+                    client.setLocationOption(option);
+                    client.startLocation();
+                    /** 创建定位器 */
+                    initAMap(aMap,(float) 27.688412,(float) 106.920726);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
         return  view;
     }
 

@@ -1,5 +1,6 @@
 package com.njupt.zyhy.Fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -39,7 +39,6 @@ import com.njupt.zyhy.unicloud.UnicloudApi;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link Fragment_Home#newInstance} factory method to
@@ -51,8 +50,6 @@ public class Fragment_Home extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-
     private JSONArray C_DataJSONArray;
     private JSONArray Z_DataJSONArray;
     private Handler handler;
@@ -61,7 +58,8 @@ public class Fragment_Home extends Fragment {
     private BannerViewPager banner_1,banner_2,banner_3;
     private List<String> urlList_wenwu,urlList_book,urlList_home;
     private ImageView imageView,scan_imageView,Seach_imageView;
-    private CircleImageView CircleImageView1,CircleImageView2,CircleImageView3,CircleImageView4,CircleImageView5,CircleImageView6,CircleImageView7,CircleImageView8;
+    private CircleImageView CircleImageView1,CircleImageView2,CircleImageView3,CircleImageView4;
+    private CircleImageView CircleImageView5,CircleImageView6,CircleImageView7,CircleImageView8;
 
     private String mParam1;
     private String mParam2;
@@ -86,31 +84,133 @@ public class Fragment_Home extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
         sp = getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-
 
     }
 
+    @SuppressLint("HandlerLeak")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment__home, container, false);
 
+        //创建handler
+        handler = new Handler() {
+            @SuppressLint("HandlerLeak")
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == 0x11) {
+                    JSONObject DataJSONObject = (JSONObject) msg.obj;
+                    Z_DataJSONArray = DataJSONObject.getJSONArray("data");
+                    try {
+                        JSONObject DataJSONObject2 = GetData("uni-data-collection");
+                        C_DataJSONArray = DataJSONObject2.getJSONArray("data");
+                        /**
+                        * 获取数据
+                        */
+                        urlList_home = new ArrayList<>();
+                        urlList_home.add("http://bmob.wxiou.cn/2021/06/02/bac9eb2c401894e580853d35f2c6d382.jpg");
+                        urlList_home.add("http://bmob.wxiou.cn/2021/06/02/dc5963db402a50b780c7f327d5831154.jpg");
+                        urlList_home.add("http://bmob.wxiou.cn/2021/06/02/4830727f40137b98807e4eaa82e5c13f.jpg");
+
+                        urlList_book = new ArrayList<>();
+                        for(int i = 0; i < Z_DataJSONArray.size(); i++){
+                            urlList_book.add(Z_DataJSONArray.getJSONObject(i).getJSONArray("image").getString(0));
+                        }
+                        urlList_wenwu = new ArrayList<>();
+                        for(int i = 0; i < C_DataJSONArray.size(); i++){
+                            urlList_wenwu.add(C_DataJSONArray.getJSONObject(i).getJSONArray("image").getString(1));
+                        }
+                        //轮播图加载
+                        banner_1.initBanner(urlList_book, false)//关闭3D画廊效果
+                                .addPageMargin(10, 80)//参数1page之间的间距,参数2中间item距离边界的间距
+                                //.addPointMargin(6)//添加指示器
+                                .addStartTimer(3)//自动轮播5秒间隔
+                                .addPointBottom(7)
+                                .addRoundCorners(10)//圆角
+                                .finishConfig()//这句必须加
+                                .addBannerListener(new BannerViewPager.OnClickBannerListener() {
+                                    @Override
+                                    public void onBannerClick(int position) {
+                                        JSONObject OneDate = Z_DataJSONArray.getJSONObject(position);
+                                        Intent intent = new Intent(getActivity(), Fragment_exhabition_detail.class);
+                                        intent.putExtra("Z_Title", OneDate.getString("title"));
+                                        intent.putExtra("Z_Subtitle", OneDate.getString("describe"));
+                                        intent.putExtra("Z_Text", OneDate.getString("text"));
+                                        intent.putExtra("Z_Pic1", OneDate.getJSONArray("image").getString(0));
+                                        intent.putExtra("Z_Pic2", OneDate.getJSONArray("image").getString(1));
+                                        intent.putExtra("Z_Pic3", OneDate.getJSONArray("image").getString(2));
+                                        intent.putExtra("Z_Pic4", OneDate.getJSONArray("image").getString(3));
+                                        startActivity(intent);
+                                    }
+                                });
+                        banner_2.initBanner(urlList_wenwu, true)//关闭3D画廊效果
+                                .addPageMargin(0, 100)//参数1page之间的间距,参数2中间item距离边界的间距
+                                //.addPointMargin(6)//添加指示器
+                                .addStartTimer(3)//自动轮播5秒间隔
+                                .addPointBottom(1)
+                                .addRoundCorners(10)//圆角
+                                .finishConfig()//这句必须加
+                                .addBannerListener(new BannerViewPager.OnClickBannerListener() {
+                                    @Override
+                                    public void onBannerClick(int position) {
+                                        JSONObject OneDate = C_DataJSONArray.getJSONObject(position);
+                                        Intent intent = new Intent(getActivity(), Fragment_collection_detail.class);
+                                        Bundle bundle = new Bundle() ;
+                                        String Datas = "材质："+OneDate.getString("texture") +"\n"+"登记号:"+OneDate.getString("registration_number")+"\n"+"文物级别："+OneDate.getString("registration_number")+"\n"+"年份："+OneDate.getString("years")+"\n"+"规格："+OneDate.getString("size")+"\n";
+
+                                        bundle.putString("C_Name",OneDate.getString("name"));
+                                        bundle.putString("C_Introduce",Datas+"\n"+"\u3000"+OneDate.getString("introduction"));
+                                        bundle.putString("C_Voice",OneDate.getJSONArray("video").getString(0));
+                                        bundle.putString("C_Pic1",OneDate.getJSONArray("image").getString(0));
+                                        bundle.putString("C_Pic2",OneDate.getJSONArray("image").getString(1));
+                                        bundle.putString("C_Pic3",OneDate.getJSONArray("image").getString(2));
+                                        intent.putExtras(bundle) ;
+                                        startActivity(intent);
+                                    }
+                                });
+                        banner_3.initBanner(urlList_home, false)//关闭3D画廊效果
+                                .addPageMargin(0, 0)//无间距
+                                .addPointMargin(6)//添加指示器
+                                .addStartTimer(5)//自动轮播5秒间隔
+                                .addPointBottom(7)
+                                .finishConfig()//这句必须加
+                                .addBannerListener(new BannerViewPager.OnClickBannerListener() {
+                                    @Override
+                                    public void onBannerClick(int position) {
+                                        //点击item
+                                        Log.i("test","--------------00x3");
+                                    }
+                                });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //FIXME 这里直接更新ui是不行的
+                Message C_message = Message.obtain();
+                //还有其他更新ui方式,runOnUiThread()等
+                try {
+                    C_message.obj = GetData("uni-data-exhibit");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                C_message.what = 0x11;
+                handler.sendMessage(C_message);
+            }
+        }).start();
         return view;
 
     }
     @Override
     public void onActivityCreated(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        try {
-            JSONObject DataJSONObject = GetData("uni-data-collection");
-            C_DataJSONArray = DataJSONObject.getJSONArray("data");
-            JSONObject DataJSONObject2 = GetData("uni-data-exhibit");
-            Z_DataJSONArray = DataJSONObject2.getJSONArray("data");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         /**
          * 轮播图初始化
          */
@@ -123,80 +223,6 @@ public class Fragment_Home extends Fragment {
         imageView = (ImageView) getActivity().findViewById(R.id.ivMsg);
         scan_imageView = (ImageView) getActivity().findViewById(R.id.ivqr);
         Seach_imageView = (ImageView) getActivity().findViewById(R.id.ivSearch);
-
-        /**
-         * 获取数据
-         */
-        urlList_home = new ArrayList<>();
-        urlList_home.add("http://bmob.wxiou.cn/2021/06/02/bac9eb2c401894e580853d35f2c6d382.jpg");
-        urlList_home.add("http://bmob.wxiou.cn/2021/06/02/dc5963db402a50b780c7f327d5831154.jpg");
-        urlList_home.add("http://bmob.wxiou.cn/2021/06/02/4830727f40137b98807e4eaa82e5c13f.jpg");
-
-        urlList_book = new ArrayList<>();
-        for(int i = 0; i < Z_DataJSONArray.size(); i++){
-            urlList_book.add(Z_DataJSONArray.getJSONObject(i).getJSONArray("image").getString(0));
-        }
-        urlList_wenwu = new ArrayList<>();
-        for(int i = 0; i < C_DataJSONArray.size(); i++){
-            urlList_wenwu.add(C_DataJSONArray.getJSONObject(i).getJSONArray("image").getString(1));
-        }
-        //轮播图加载
-        banner_1.initBanner(urlList_book, false)//关闭3D画廊效果
-                .addPageMargin(10, 80)//参数1page之间的间距,参数2中间item距离边界的间距
-                //.addPointMargin(6)//添加指示器
-                .addStartTimer(3)//自动轮播5秒间隔
-                .addPointBottom(7)
-                .addRoundCorners(10)//圆角
-                .finishConfig()//这句必须加
-                .addBannerListener(new BannerViewPager.OnClickBannerListener() {
-                    @Override
-                    public void onBannerClick(int position) {
-                        JSONObject OneDate = Z_DataJSONArray.getJSONObject(position);
-                        Intent intent = new Intent(getActivity(), Fragment_exhabition_detail.class);
-                        intent.putExtra("Z_Title", OneDate.getString("title"));
-                        intent.putExtra("Z_Subtitle", OneDate.getString("describe"));
-                        intent.putExtra("Z_Text", OneDate.getString("text"));
-                        intent.putExtra("Z_Pic1", OneDate.getJSONArray("image").getString(0));
-                        intent.putExtra("Z_Pic2", OneDate.getJSONArray("image").getString(1));
-                        intent.putExtra("Z_Pic3", OneDate.getJSONArray("image").getString(2));
-                        intent.putExtra("Z_Pic4", OneDate.getJSONArray("image").getString(3));
-                        startActivity(intent);
-                    }
-                });
-        banner_2.initBanner(urlList_wenwu, true)//关闭3D画廊效果
-                .addPageMargin(0, 100)//参数1page之间的间距,参数2中间item距离边界的间距
-                //.addPointMargin(6)//添加指示器
-                .addStartTimer(3)//自动轮播5秒间隔
-                .addPointBottom(1)
-                .addRoundCorners(10)//圆角
-                .finishConfig()//这句必须加
-                .addBannerListener(new BannerViewPager.OnClickBannerListener() {
-                    @Override
-                    public void onBannerClick(int position) {
-                        JSONObject OneDate = C_DataJSONArray.getJSONObject(position);
-                        Intent intent = new Intent(getActivity(), Fragment_collection_detail.class);
-                        intent.putExtra("C_Name",OneDate.getString("name"));
-                        intent.putExtra("C_Introduce",OneDate.getString("introduction"));
-                        intent.putExtra("C_Voice",OneDate.getJSONArray("video").getString(0));
-                        intent.putExtra("C_Pic1",OneDate.getJSONArray("image").getString(0));
-                        intent.putExtra("C_Pic2",OneDate.getJSONArray("image").getString(1));
-                        intent.putExtra("C_Pic3",OneDate.getJSONArray("image").getString(2));
-                        startActivity(intent);
-                    }
-                });
-        banner_3.initBanner(urlList_home, false)//关闭3D画廊效果
-                .addPageMargin(0, 0)//无间距
-                .addPointMargin(6)//添加指示器
-                .addStartTimer(5)//自动轮播5秒间隔
-                .addPointBottom(7)
-                .finishConfig()//这句必须加
-                .addBannerListener(new BannerViewPager.OnClickBannerListener() {
-                    @Override
-                    public void onBannerClick(int position) {
-                        //点击item
-                        Log.i("test","--------------00x3");
-                    }
-                });
 
         //消息点击事件
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -212,9 +238,7 @@ public class Fragment_Home extends Fragment {
         scan_imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //IntentIntegrator intentIntegrator = new IntentIntegrator();
                 IntentIntegrator intentIntegrator = IntentIntegrator.forSupportFragment(Fragment_Home.this);
-
                 intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
                 intentIntegrator.setCaptureActivity(ScanActivity.class);
                 intentIntegrator.setPrompt("请扫描二维码");//底部的提示文字
@@ -228,14 +252,10 @@ public class Fragment_Home extends Fragment {
         Seach_imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(getActivity(), Fragment_Home_seach.class);
-                intent.putExtra("Collection", mParam1);
-                intent.putExtra("Exhibit", mParam2);
                 startActivity(intent);
             }
         });
-
 
         /**
          * 按钮矩阵点击事件

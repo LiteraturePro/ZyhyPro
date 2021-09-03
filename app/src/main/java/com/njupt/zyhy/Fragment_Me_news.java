@@ -7,10 +7,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,9 +22,7 @@ import com.njupt.zyhy.unicloud.UnicloudApi;
 
 public class Fragment_Me_news extends Activity implements View.OnClickListener{
     private ImageView back;
-    private static final String TAG = "MainActivity";
     private SideslipListView_news mSideslipListView;
-
     private Handler handler;
     private SharedPreferences sp;
     private JSONArray DataJSONArray;
@@ -51,13 +47,9 @@ public class Fragment_Me_news extends Activity implements View.OnClickListener{
         back.setOnClickListener(this);
 
         sp = this.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-
-        /**
-         * 初始化数据
-         */
-
         //创建handler
         handler = new Handler() {
+            @SuppressLint("HandlerLeak")
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
@@ -66,27 +58,6 @@ public class Fragment_Me_news extends Activity implements View.OnClickListener{
                     DataJSONArray = DataJSONObject.getJSONArray("data");
                     mSideslipListView = (SideslipListView_news) findViewById(R.id.news_sideslipListView);
                     mSideslipListView.setAdapter(new CustomAdapter());//设置适配器
-                    //设置item点击事件
-                    mSideslipListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            if (mSideslipListView.isAllowItemClick()) {
-                                Log.i(TAG, DataJSONArray.getJSONObject(position).getString("title") + "被点击了");
-                            }
-                        }
-                    });
-                    //设置item长按事件
-                    mSideslipListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                        @SuppressLint("HandlerLeak")
-                        @Override
-                        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                            if (mSideslipListView.isAllowItemClick()) {
-                                Log.i("TAG", DataJSONArray.getJSONObject(position).getString("title") + "被长按了");
-                                return true;//返回true表示本次事件被消耗了，若返回
-                            }
-                            return false;
-                        }
-                    });
                 }
             }
         };
@@ -106,8 +77,6 @@ public class Fragment_Me_news extends Activity implements View.OnClickListener{
                 handler.sendMessage(message);
             }
         }).start();
-
-
     }
 
     /**
@@ -151,7 +120,6 @@ public class Fragment_Me_news extends Activity implements View.OnClickListener{
             viewHolder.news_title.setText(OneDate.getString("title"));
             viewHolder.news_text.setText(OneDate.getString("excerpt"));
             viewHolder.news_img.setImageBitmap(GetHttpBitmap.getHttpBitmap(OneDate.getJSONArray("image").getString(0)));
-
             return view;
         }
     }
@@ -164,7 +132,6 @@ public class Fragment_Me_news extends Activity implements View.OnClickListener{
     private JSONObject GetData(String Table) throws Exception {
         return UnicloudApi.GetData(sp.getString("token",""),Table);
     }
-
 
     @Override
     protected void onDestroy() {

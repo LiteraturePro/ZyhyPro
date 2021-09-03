@@ -49,15 +49,11 @@ public class Fragment_Exhibition extends Fragment {
     private ImageView imageView;
     private TextView textView;
     private Bitmap bitmap;
-
     private RecyclerView rv;
     private List<HistoryBean> historyList= new ArrayList<>();
-
     private JSONArray Z_DataJSONArray;
     private Handler handler;
     private SharedPreferences sp;
-
-
 
     public Fragment_Exhibition() {
         // Required empty public constructor

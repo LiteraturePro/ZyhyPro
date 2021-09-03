@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
-
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
@@ -31,7 +29,6 @@ import com.njupt.zyhy.R;
 import com.njupt.zyhy.bean.Msg;
 import com.njupt.zyhy.bean.MsgLab;
 import com.njupt.zyhy.unicloud.UnicloudApi;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,20 +44,14 @@ public class Fragment_Collection extends Fragment implements AdapterView.OnItemC
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     private ImageView deng;
 
     private List<CItem> CnameList;
     private GridView gridView;
     private ImageView imageView;
-
     private GridView mLvMsgList;
     private List<Msg> mDatas = new ArrayList<>();
     private MsgAdapter mAdapter;
-
-
     private JSONArray C_DataJSONArray;
     private Handler handler;
     private SharedPreferences sp;
@@ -170,7 +161,6 @@ public class Fragment_Collection extends Fragment implements AdapterView.OnItemC
                 }
             }
         };
-
 
         new Thread(new Runnable() {
             @Override

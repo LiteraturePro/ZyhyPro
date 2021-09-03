@@ -1,8 +1,13 @@
 package com.njupt.zyhy;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,8 +23,11 @@ import android.widget.EditText;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.lzj.gallery.library.views.BannerViewPager;
 import com.njupt.zyhy.Adapter.MyAdapter;
 import com.njupt.zyhy.bean.FilterListener;
+import com.njupt.zyhy.bean.HistoryBean;
+import com.njupt.zyhy.unicloud.UnicloudApi;
 
 import androidx.annotation.Nullable;
 
@@ -29,9 +37,11 @@ public class Fragment_Home_seach extends Activity implements View.OnClickListene
     private ListView lsv_ss;
     private List<String> list = new ArrayList<String>();
     private MyAdapter adapter = null;
-    private String Collection,Exhibit;
-    private ArrayList<String> C_id,C_Class,C_Voice,C_Name,C_Introduce,C_Pic1,C_Pic2,C_Pic3;
-    private ArrayList<String> Z_Title,Z_Subtitle,Z_Text,Z_Pic1,Z_Pic2,Z_Pic3,Z_Pic4;
+    private SharedPreferences sp;
+    private Handler handler;
+    private JSONArray C_DataJSONArray;
+    private JSONArray Z_DataJSONArray;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,17 +50,56 @@ public class Fragment_Home_seach extends Activity implements View.OnClickListene
         setContentView(R.layout.fragment_home_search);
         textView =(TextView)findViewById(R.id.tv_search_exit);
         textView.setOnClickListener(this);
+        sp = this.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
 
-        Intent intent=getIntent();
-        Collection =intent.getStringExtra("Collection");
-        Exhibit =intent.getStringExtra("Exhibit");
+        //创建handler
+        handler = new Handler() {
+            @SuppressLint("HandlerLeak")
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == 0x11) {
+                    JSONObject DataJSONObject = (JSONObject) msg.obj;
+                    Z_DataJSONArray = DataJSONObject.getJSONArray("data");
+                    for (int i= 0; i< Z_DataJSONArray.size(); i++){
+                        String bean = Z_DataJSONArray.getJSONObject(i).getString("title");
+                        list.add(bean);
+                    }
+                    try {
+                        JSONObject DataJSONObject2 = GetData("uni-data-collection");
+                        C_DataJSONArray = DataJSONObject2.getJSONArray("data");
+                        for (int i= 0; i< C_DataJSONArray.size(); i++){
+                            String bean = C_DataJSONArray.getJSONObject(i).getString("name");
+                            list.add(bean);
+                        }
+                        setViews();// 控件初始化
+                        setData();// 给listView设置adapter
+                        setListeners();// 设置监听
 
-        setViews();// 控件初始化
-        setData();// 给listView设置adapter
-        setListeners();// 设置监听
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //FIXME 这里直接更新ui是不行的
+                Message C_message = Message.obtain();
+                //还有其他更新ui方式,runOnUiThread()等
+                try {
+                    C_message.obj = GetData("uni-data-exhibit");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                C_message.what = 0x11;
+                handler.sendMessage(C_message);
+            }
+        }).start();
+
     }
     private void setData() {
-        initData(Exhibit,Collection);// 初始化数据
 
         // 这里创建adapter的时候，构造方法参数传了一个接口对象，回调接口中的方法来实现对过滤后的数据的获取
         adapter = new MyAdapter(list, this, new FilterListener() {
@@ -74,36 +123,44 @@ public class Fragment_Home_seach extends Activity implements View.OnClickListene
         lsv_ss.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                for (int i = 0; i < Z_Title.size(); i++) {
-                    if (countStr(Z_Title.get(i),filter_lists.get(position))) {
+                for (int i = 0; i < Z_DataJSONArray.size(); i++) {
+                    if (countStr(Z_DataJSONArray.getJSONObject(i).getString("title"),filter_lists.get(position))) {
+                        JSONObject OneDate = Z_DataJSONArray.getJSONObject(i);
                         Intent intent = new Intent(getApplicationContext(), Fragment_exhabition_detail.class);
-                        intent.putExtra("Z_Title", Z_Title.get(i));
-                        intent.putExtra("Z_Subtitle", Z_Subtitle.get(i));
-                        intent.putExtra("Z_Text", Z_Text.get(i));
-                        intent.putExtra("Z_Pic1", Z_Pic1.get(i));
-                        intent.putExtra("Z_Pic2", Z_Pic2.get(i));
-                        intent.putExtra("Z_Pic3", Z_Pic3.get(i));
-                        intent.putExtra("Z_Pic4", Z_Pic4.get(i));
+                        intent.putExtra("Z_Title", OneDate.getString("title"));
+                        intent.putExtra("Z_Subtitle", OneDate.getString("describe"));
+                        intent.putExtra("Z_Text", OneDate.getString("text"));
+                        intent.putExtra("Z_Pic1", OneDate.getJSONArray("image").getString(0));
+                        intent.putExtra("Z_Pic2", OneDate.getJSONArray("image").getString(1));
+                        intent.putExtra("Z_Pic3", OneDate.getJSONArray("image").getString(2));
+                        intent.putExtra("Z_Pic4", OneDate.getJSONArray("image").getString(3));
                         startActivity(intent);
                         break;
                     }
                 }
-                for (int i = 0; i < C_Name.size(); i++) {
-                    if (countStr(C_Name.get(i),filter_lists.get(position))) {
+                for (int i = 0; i < C_DataJSONArray.size(); i++) {
+                    if (countStr(C_DataJSONArray.getJSONObject(i).getString("name"),filter_lists.get(position))) {
+                        JSONObject OneDate = C_DataJSONArray.getJSONObject(i);
                         Intent intent = new Intent(getApplicationContext(), Fragment_collection_detail.class);
-                        intent.putExtra("C_Name", C_Name.get(i));
-                        intent.putExtra("C_Voice", C_Voice.get(i));
-                        intent.putExtra("C_Introduce", C_Introduce.get(i));
-                        intent.putExtra("C_Pic1", C_Pic1.get(i));
-                        intent.putExtra("C_Pic2", C_Pic2.get(i));
-                        intent.putExtra("C_Pic3", C_Pic3.get(i));
+
+                        //可以把要传递的参数放到一个bundle里传递过去，bumdle可以看做一个特殊的map。
+                        Bundle bundle = new Bundle() ;
+                        String Datas = "材质："+OneDate.getString("texture") +"\n"+"登记号:"+OneDate.getString("registration_number")+"\n"+"文物级别："+OneDate.getString("registration_number")+"\n"+"年份："+OneDate.getString("years")+"\n"+"规格："+OneDate.getString("size")+"\n";
+
+                        bundle.putString("C_Name",OneDate.getString("name"));
+                        bundle.putString("C_Introduce",Datas+"\n"+"\u3000"+OneDate.getString("introduction"));
+                        bundle.putString("C_Voice",OneDate.getJSONArray("video").getString(0));
+                        bundle.putString("C_Pic1",OneDate.getJSONArray("image").getString(0));
+                        bundle.putString("C_Pic2",OneDate.getJSONArray("image").getString(1));
+                        bundle.putString("C_Pic3",OneDate.getJSONArray("image").getString(2));
+                        intent.putExtras(bundle) ;
                         startActivity(intent);
                         break;
                     } else {
                         // 点击对应的item时，弹出toast提示所点击的内容
                         System.out.println(i);
-                        System.out.println(Z_Title.equals(filter_lists.get(position)));
-                        System.out.println(C_Name.equals(filter_lists.get(position)));
+//                        System.out.println(Z_Title.equals(filter_lists.get(position)));
+//                        System.out.println(C_Name.equals(filter_lists.get(position)));
                         //Toast.makeText(Fragment_Home_seach.this, filter_lists.get(position), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -126,33 +183,6 @@ public class Fragment_Home_seach extends Activity implements View.OnClickListene
         }
         return false;
     }
-
-    /**
-     * 简单的list集合添加一些测试数据
-     */
-    private void initData( String exhibit,String collection) {
-        C_id = new ArrayList<String>();
-        C_Class = new ArrayList<String>();
-        C_Voice = new ArrayList<String>();
-        C_Name = new ArrayList<String>();
-        C_Introduce = new ArrayList<String>();
-        C_Pic1 = new ArrayList<String>();
-        C_Pic2 = new ArrayList<String>();
-        C_Pic3 = new ArrayList<String>();
-
-        // 初始化数据
-        Z_Title  = new ArrayList<String>();
-        Z_Subtitle  = new ArrayList<String>();
-        Z_Text  = new ArrayList<String>();
-        Z_Pic1 = new ArrayList<String>();
-        Z_Pic2 = new ArrayList<String>();
-        Z_Pic3 = new ArrayList<String>();
-        Z_Pic4 = new ArrayList<String>();
-
-        inindate2(exhibit);
-        inindate(collection);
-    }
-
     private void setListeners() {
         // 没有进行搜索的时候，也要添加对listView的item单击监听
         setItemClick(list);
@@ -179,7 +209,6 @@ public class Fragment_Home_seach extends Activity implements View.OnClickListene
                     lsv_ss.setVisibility(View.VISIBLE);
                 }
             }
-
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,
                                           int after) {
@@ -187,7 +216,6 @@ public class Fragment_Home_seach extends Activity implements View.OnClickListene
                 lsv_ss.setVisibility(View.GONE);
 
             }
-
             @Override
             public void afterTextChanged(Editable s) {
                 // TODO Auto-generated method stub
@@ -203,7 +231,6 @@ public class Fragment_Home_seach extends Activity implements View.OnClickListene
         lsv_ss = (ListView)findViewById(R.id.list_sv);// ListView控件
 
     }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -214,121 +241,7 @@ public class Fragment_Home_seach extends Activity implements View.OnClickListene
                 break;
         }
     }
-    private void inindate(String re){
-
-        String id;
-        String Class,Voice,Name,Introduce,Pic1,Pic2,Pic3;;
-        JSONObject jsonObject = JSON.parseObject(re);
-        //获取当前嵌套下的属性
-        String status = jsonObject.getString("results");
-        if (status!=null){
-            //获取嵌套中的json串,细心观察 content为json数组，里面可放多个json对象
-            JSONArray jsonArray = jsonObject.getJSONArray("results");
-            System.out.println(jsonArray);
-
-            for(int i =0;i < jsonArray.size(); i++) {
-                JSONObject jsonFirst = jsonArray.getJSONObject(i);
-
-                //取出这个json中的值
-                id = jsonFirst.getString("id");
-                if (id != null) {
-                    C_id.add(id);
-                }
-                //取出这个json中的值
-                Class = jsonFirst.getString("Class");
-                if (Class != null) {
-                    C_Class.add(Class);
-                }
-                //取出这个json中的值
-                Voice = jsonFirst.getString("Voice");
-                if (Voice != null) {
-
-                    C_Voice.add(Voice);
-                }
-                //取出这个json中的值
-                Name = jsonFirst.getString("Name");
-                if (Name != null) {
-
-                    C_Name.add(Name);
-                    list.add(Name);
-                }
-                //取出这个json中的值
-                Introduce = jsonFirst.getString("Introduce");
-                if (Introduce != null) {
-
-                    C_Introduce.add(Introduce);
-                }
-                //取出这个json中的值
-                Pic1 = jsonFirst.getString("Pic1");
-                if (Pic1 != null) {
-
-                    C_Pic1.add(Pic1);
-                }
-                //取出这个json中的值
-                Pic2 = jsonFirst.getString("Pic2");
-                if (Pic2 != null) {
-
-                    C_Pic2.add(Pic2);
-                }
-                //取出这个json中的值
-                Pic3 = jsonFirst.getString("Pic3");
-                if (Pic3 != null) {
-
-                    C_Pic3.add(Pic3);
-                }
-            }
-        }
-    }
-    private void inindate2(String re){
-        String Title,Subtitle,Text,Pic1,Pic2,Pic3,Pic4;
-        JSONObject jsonObject = JSON.parseObject(re);
-        //获取当前嵌套下的属性
-        String status = jsonObject.getString("results");
-        if (status!=null){
-            //获取嵌套中的json串,细心观察 content为json数组，里面可放多个json对象
-            JSONArray jsonArray = jsonObject.getJSONArray("results");
-            System.out.println(jsonArray);
-
-            for(int i =0;i < jsonArray.size(); i++) {
-                JSONObject jsonFirst = jsonArray.getJSONObject(i);
-
-                //取出这个json中的值
-                Title = jsonFirst.getString("Title");
-                if (Title != null) {
-                    Z_Title.add(Title);
-                    list.add(Title);
-                }
-                //取出这个json中的值
-                Subtitle = jsonFirst.getString("Subtitle");
-                if (Subtitle != null) {
-                    Z_Subtitle.add(Subtitle);
-                }
-                //取出这个json中的值
-                Text = jsonFirst.getString("Text");
-                if (Text != null) {
-                    Z_Text.add(Text);
-                }
-                //取出这个json中的值
-                Pic1 = jsonFirst.getString("Pic1");
-                if (Pic1 != null) {
-                    Z_Pic1.add(Pic1);
-                }
-                //取出这个json中的值
-                Pic2 = jsonFirst.getString("Pic2");
-                if (Pic2 != null) {
-                    Z_Pic2.add(Pic2);
-                }
-                //取出这个json中的值
-                Pic3 = jsonFirst.getString("Pic3");
-                if (Pic3 != null) {
-                    Z_Pic3.add(Pic3);
-                }
-                //取出这个json中的值
-                Pic4 = jsonFirst.getString("Pic4");
-                if (Pic4 != null) {
-                    Z_Pic4.add(Pic4);
-                }
-            }
-        }
+    private JSONObject GetData(String Table) throws Exception {
+        return UnicloudApi.GetData(sp.getString("token",""),Table);
     }
 }
