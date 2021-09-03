@@ -3,11 +3,33 @@ package com.njupt.zyhy.unicloud;
 import android.util.Log;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.loopj.android.http.HttpGet;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.NameValuePair;
+import cz.msebera.android.httpclient.ParseException;
+import cz.msebera.android.httpclient.client.ClientProtocolException;
+import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.entity.UrlEncodedFormEntity;
+import cz.msebera.android.httpclient.client.methods.HttpPost;
+import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
+import cz.msebera.android.httpclient.message.BasicNameValuePair;
+import cz.msebera.android.httpclient.params.HttpConnectionParams;
+import cz.msebera.android.httpclient.params.HttpParams;
+import cz.msebera.android.httpclient.util.EntityUtils;
 
 public class UnicloudApi {
     private static final String CONTENT_TYPE_TAG = "Content-Type";
@@ -240,16 +262,11 @@ public class UnicloudApi {
      */
     public static String Uploadfile(String Token, String base64) throws Exception {
         String Url = URL_file_Upload +"token="+Token+"&buffer="+base64;
-        JSONObject Json = URL_Post(Url);
-
-
-        Log.d("Json",Json.toString());
-        String code = Json.getString("code");
-        if (code != "0"){
-            return Json.getString("msg");
-        }else {
-            return Json.getString("msg");
-        }
+        System.out.println(base64);
+        Log.d("ggggg",base64);
+        Object Json = setImgByStr(Token,base64,URL_file_Upload);
+        System.out.println(Json);
+        return "s";
 
     }
     /**
@@ -426,6 +443,93 @@ public class UnicloudApi {
         InputStream inputStream = conn.getInputStream();
         JSONObject json = streamToJson(inputStream); // 从响应流中提取 JSON
         return json;
+    }
+    public static String getContent(String url) throws Exception {
+
+        StringBuilder sb = new StringBuilder();
+
+        HttpClient client = new DefaultHttpClient();
+        HttpParams httpParams = client.getParams();
+        // 设置网络超时参数
+        HttpConnectionParams.setConnectionTimeout(httpParams, 3000);
+
+        HttpConnectionParams.setSoTimeout(httpParams, 5000);
+        HttpResponse response = client.execute(new HttpGet(url));
+        HttpEntity entity = response.getEntity();
+        if (entity != null) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    entity.getContent(), "UTF-8"), 8192);
+
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            reader.close();
+        }
+
+        return sb.toString();
+    }
+    public static HttpResponse post(Map<String, Object> params, String url) {
+
+        HttpClient client = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.addHeader("charset", UTF8);
+        httpPost.setHeader("Content-Type",
+                "application/x-www-form-urlencoded; charset=utf-8");
+        HttpResponse response = null;
+        System.out.println("99999999999999999");
+        System.out.println(params);
+        if (params != null && params.size() > 0) {
+            List<NameValuePair> nameValuepairs = new ArrayList<NameValuePair>();
+            for (String key : params.keySet()) {
+                nameValuepairs.add(new BasicNameValuePair(key, (String) params
+                        .get(key)));
+            }
+            try {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuepairs,
+                        UTF8));
+                response = client.execute(httpPost);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                response = client.execute(httpPost);
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return response;
+
+    }
+    public static Object getValues(Map<String, Object> params, String url) {
+        String token = "";
+        HttpResponse response = post(params, url);
+        if (response != null) {
+            try {
+                token = EntityUtils.toString(response.getEntity());
+                response.removeHeaders("operator");
+            } catch (ParseException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return token;
+    }
+    public static Object setImgByStr(String imgStr,String imgName,String url){
+        Map<String,Object> params = new HashMap<String, Object>();
+        params.put("buffer", imgName);
+        return getValues(params, url);
     }
 
 }

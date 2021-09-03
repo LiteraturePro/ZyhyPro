@@ -29,9 +29,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
 import com.codbking.view.ItemView;
 import com.google.android.material.snackbar.Snackbar;
 import com.hb.dialog.myDialog.ActionSheetDialog;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.Base64;
+import com.loopj.android.http.RequestParams;
 import com.njupt.zyhy.Fragment_Me_collection;
 import com.njupt.zyhy.Fragment_Me_feedback;
 import com.njupt.zyhy.Fragment_Me_lost;
@@ -47,9 +53,12 @@ import com.njupt.zyhy.bean.ImageUtil;
 import com.njupt.zyhy.unicloud.UnicloudApi;
 import com.shehuan.niv.NiceImageView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import cz.msebera.android.httpclient.Header;
 
 
 public class Fragment_Me extends Fragment {
@@ -300,7 +309,9 @@ public class Fragment_Me extends Fragment {
                         //将拍摄的照片显示出来
                         Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(ImageUri));
                         bitmap_upload = bitmap;
+                        System.out.println("bas64:"+ImageUtil.byte2Base64(ImageUtil.bitmap2Byte(bitmap_upload)));
                         String url = UnicloudApi.Uploadfile(sp.getString("token",""), ImageUtil.byte2Base64(ImageUtil.bitmap2Byte(bitmap_upload)));
+                        System.out.println("src:"+url);
                         if(UnicloudApi.Updateavatar(sp.getString("id",""),url).equals("1")){
                             showToast("更新头像成功");
                         }else{
@@ -322,18 +333,36 @@ public class Fragment_Me extends Fragment {
                         Uri uri_photo = data.getData();
                         Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(uri_photo));
                         bitmap_upload = bitmap;
-                        String url = UnicloudApi.Uploadfile(sp.getString("token",""),ImageUtil.byte2Base64(ImageUtil.bitmap2Byte(bitmap_upload)));
-                        if(UnicloudApi.Updateavatar(sp.getString("id",""),url).equals("1")){
-                            showToast("更新头像成功");
-                        }else{
-                            showToast("更新头像失败");
-                        }
-                        imageView.setImageBitmap(bitmap);
+                        String base64 = ImageUtil.Bitmap2Base64(bitmap);
+
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //FIXME 这里直接更新ui是不行的
+                                //还有其他更新ui方式,runOnUiThread()等
+                                try {
+                                    String url = UnicloudApi.Uploadfile(sp.getString("token",""),base64);
+
+
+                                    if(UnicloudApi.Updateavatar(sp.getString("id",""),url).equals("1")){
+                                        showToast("更新头像成功");
+                                    }else{
+                                        showToast("更新头像失败");
+                                    }
+                                    imageView.setImageBitmap(bitmap);
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+
                 }
                 break;
             default:
