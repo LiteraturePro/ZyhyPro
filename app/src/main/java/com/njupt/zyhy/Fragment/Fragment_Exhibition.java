@@ -110,11 +110,11 @@ public class Fragment_Exhibition extends Fragment {
 
         // 多吉云视频插件
         DogePlayer playerview = view.findViewById(R.id.player);
-        DogeMediaPlayer dgplayer = playerview.getMediaPlayer();
-        dgplayer.setSources(1670,"44184a6a5f5efa98")
-                .setConfig(DogeInclude.CONFIG_TITLE,"这里是遵义!")
-                .setConfig(DogeInclude.UI_CONFIG_FULLSCREENBTN, String.valueOf(1))
-                .Init();
+//        DogeMediaPlayer dgplayer = playerview.getMediaPlayer();
+//        dgplayer.setSources(1670,"44184a6a5f5efa98")
+//                .setConfig(DogeInclude.CONFIG_TITLE,"这里是遵义!")
+//                .setConfig(DogeInclude.UI_CONFIG_FULLSCREENBTN, String.valueOf(1))
+//                .Init();
 
         rv= view.findViewById(R.id.main_rv);
 
@@ -131,6 +131,13 @@ public class Fragment_Exhibition extends Fragment {
                         HistoryBean bean= new HistoryBean(Z_DataJSONArray.getJSONObject(i).getString("title"), Z_DataJSONArray.getJSONObject(i).getJSONArray("image").getString(0), Z_DataJSONArray.getJSONObject(i).getString("describe"));
                         historyList.add(bean);
                     }
+
+                    DogeMediaPlayer dgplayer = playerview.getMediaPlayer();
+                    dgplayer.setSources(1670,"44184a6a5f5efa98")
+                            .setConfig(DogeInclude.CONFIG_TITLE,"这里是遵义!")
+                            .setConfig(DogeInclude.UI_CONFIG_FULLSCREENBTN, String.valueOf(1))
+                            .Init();
+
                     LinearLayoutManager manager= new LinearLayoutManager(getActivity());
                     rv.setLayoutManager(manager);
                     HistoryAdapter adapter= new HistoryAdapter(historyList);

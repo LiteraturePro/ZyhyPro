@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import androidx.annotation.Nullable;
 import com.mob.MobSDK;
+import com.njupt.zyhy.unicloud.UnicloudApi;
 
 public class WelcomeActivity extends Activity {
     private SharedPreferences sp;
@@ -45,5 +47,19 @@ public class WelcomeActivity extends Activity {
                 }
             }
         }, 500);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //FIXME 这里直接更新ui是不行的
+                Message message = Message.obtain();
+                //还有其他更新ui方式,runOnUiThread()等
+                try {
+                    UnicloudApi.wakeup();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }

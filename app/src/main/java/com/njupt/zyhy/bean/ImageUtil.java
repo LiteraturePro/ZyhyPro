@@ -2,7 +2,9 @@ package com.njupt.zyhy.bean;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.util.Base64;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 
@@ -54,10 +56,31 @@ public class ImageUtil {
     public static String Bitmap2Base64(Bitmap bitmap){
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        //参数2：压缩率，40表示压缩掉60%; 如果不压缩是100，表示压缩率为0
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+        if(getBitmapSize(bitmap) >= 8388608 && getBitmapSize(bitmap) <= 16777216){
+            //参数2：压缩率，40表示压缩掉60%; 如果不压缩是100，表示压缩率为0
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+        }else if(getBitmapSize(bitmap) >= 16777216 && getBitmapSize(bitmap) <= 41943040){
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 30, bos);
+        }else if(getBitmapSize(bitmap) >= 41943040){
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 10, bos);
+        }else{
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+        }
         byte[] bytes = bos.toByteArray();
         return Base64.encodeToString(bytes, Base64.DEFAULT);
+    }
+    /**
+     * 得到bitmap的大小
+     */
+    public static int getBitmapSize(Bitmap bitmap) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {    //API 19
+            return bitmap.getAllocationByteCount();
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {//API 12
+            return bitmap.getByteCount();
+        }
+        // 在低版本中用一行的字节x高度
+        return bitmap.getRowBytes() * bitmap.getHeight();
     }
 
 }

@@ -114,8 +114,9 @@ public class Fragment_exhibition_collect extends AppCompatActivity implements Vi
             return;
         }
         else{
-            String url = UnicloudApi.Uploadfile(sp.getString("token",""), ImageUtil.byte2Base64(ImageUtil.bitmap2Byte(bitmap_upload)));
-            //UnicloudApi.Add_Collect("uni-data-collect",sp.getString("token",""),url,C_Description,C_Name,C_Ways,C_Ways);
+            String base64 = ImageUtil.Bitmap2Base64(bitmap_upload);
+
+            String url = UnicloudApi.Uploadfile(sp.getString("token",""),base64);
 
             if (Integer.parseInt(  UnicloudApi.Add_Collect("uni-data-collect",sp.getString("token",""),url,C_Description,C_Name,C_Ways,C_address)) > 0) {
                 showToast("提交成功!");

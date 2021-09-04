@@ -1,6 +1,7 @@
 package com.njupt.zyhy.Fragment;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Message;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -27,17 +30,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.alibaba.fastjson.JSONObject;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
 import com.codbking.view.ItemView;
 import com.google.android.material.snackbar.Snackbar;
 import com.hb.dialog.myDialog.ActionSheetDialog;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.Base64;
-import com.loopj.android.http.RequestParams;
 import com.njupt.zyhy.Fragment_Me_collection;
 import com.njupt.zyhy.Fragment_Me_feedback;
 import com.njupt.zyhy.Fragment_Me_lost;
@@ -52,14 +48,9 @@ import com.njupt.zyhy.bean.GetHttpBitmap;
 import com.njupt.zyhy.bean.ImageUtil;
 import com.njupt.zyhy.unicloud.UnicloudApi;
 import com.shehuan.niv.NiceImageView;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import cz.msebera.android.httpclient.Header;
-
 
 public class Fragment_Me extends Fragment {
 
@@ -77,6 +68,7 @@ public class Fragment_Me extends Fragment {
     private Bitmap bitmap_upload;
     private String TAG = "tag";
     private SharedPreferences sp;
+    private Handler handler;
     private static String path = "/sdcard/myHead/";// sd路径
     //需要的权限数组 读/写/相机
     private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -119,6 +111,7 @@ public class Fragment_Me extends Fragment {
 
         sp = getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
 
+
     }
 
     @Override
@@ -153,6 +146,32 @@ public class Fragment_Me extends Fragment {
                 e.printStackTrace();
             }
         }
+
+        //创建handler
+        handler = new Handler() {
+            @SuppressLint("HandlerLeak")
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == 0x11) {
+                    if((int)msg.obj == 0){
+                        showToast("头像更新失败");
+                    }else{
+                        showToast("头像更新成功");
+                        JSONObject UserInfo = null;
+                        try {
+                            UserInfo = UnicloudApi.GetUserInfo(uid);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        String url = UserInfo.getString("avatar");
+                        //得到可用的图片
+                        bitmap = GetHttpBitmap.getHttpBitmap(url);
+                        imageView.setImageBitmap(bitmap);
+                    }
+                }
+            }
+        };
         return view;
     }
 
@@ -308,16 +327,35 @@ public class Fragment_Me extends Fragment {
                     try {
                         //将拍摄的照片显示出来
                         Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(ImageUri));
-                        bitmap_upload = bitmap;
-                        System.out.println("bas64:"+ImageUtil.byte2Base64(ImageUtil.bitmap2Byte(bitmap_upload)));
-                        String url = UnicloudApi.Uploadfile(sp.getString("token",""), ImageUtil.byte2Base64(ImageUtil.bitmap2Byte(bitmap_upload)));
-                        System.out.println("src:"+url);
-                        if(UnicloudApi.Updateavatar(sp.getString("id",""),url).equals("1")){
-                            showToast("更新头像成功");
-                        }else{
-                            showToast("更新头像失败");
-                        }
-                        imageView.setImageBitmap(bitmap);
+                        String base64 = ImageUtil.Bitmap2Base64(bitmap);
+
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //FIXME 这里直接更新ui是不行的
+                                //还有其他更新ui方式,runOnUiThread()等
+                                try {
+                                    String url = UnicloudApi.Uploadfile(sp.getString("token",""),base64);
+                                    Log.d("结果",url);
+                                    if(UnicloudApi.Updateavatar(sp.getString("id",""),url).equals("1")){
+                                        Message message = Message.obtain();
+                                        //还有其他更新ui方式,runOnUiThread()等
+                                        message.obj = 1;
+                                        message.what = 0x11;
+                                        handler.sendMessage(message);
+                                        bitmap.recycle();
+                                    }else{
+                                        Message message = Message.obtain();
+                                        //还有其他更新ui方式,runOnUiThread()等
+                                        message.obj = 0;
+                                        message.what = 0x11;
+                                        bitmap.recycle();
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (Exception e) {
@@ -332,7 +370,6 @@ public class Fragment_Me extends Fragment {
                         //将相册的照片显示出来
                         Uri uri_photo = data.getData();
                         Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(uri_photo));
-                        bitmap_upload = bitmap;
                         String base64 = ImageUtil.Bitmap2Base64(bitmap);
 
                         new Thread(new Runnable() {
@@ -342,15 +379,21 @@ public class Fragment_Me extends Fragment {
                                 //还有其他更新ui方式,runOnUiThread()等
                                 try {
                                     String url = UnicloudApi.Uploadfile(sp.getString("token",""),base64);
-
-
+                                    Log.d("结果",url);
                                     if(UnicloudApi.Updateavatar(sp.getString("id",""),url).equals("1")){
-                                        showToast("更新头像成功");
+                                        Message message = Message.obtain();
+                                        //还有其他更新ui方式,runOnUiThread()等
+                                        message.obj = 1;
+                                        message.what = 0x11;
+                                        handler.sendMessage(message);
+                                        bitmap.recycle();
                                     }else{
-                                        showToast("更新头像失败");
+                                        Message message = Message.obtain();
+                                        //还有其他更新ui方式,runOnUiThread()等
+                                        message.obj = 0;
+                                        message.what = 0x11;
+                                        bitmap.recycle();
                                     }
-                                    imageView.setImageBitmap(bitmap);
-
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -361,8 +404,6 @@ public class Fragment_Me extends Fragment {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
-
                 }
                 break;
             default:

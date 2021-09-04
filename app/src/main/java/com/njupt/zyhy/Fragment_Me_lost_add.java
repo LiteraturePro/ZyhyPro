@@ -234,8 +234,9 @@ public class Fragment_Me_lost_add  extends Activity implements View.OnClickListe
     private void add_lost() throws Exception {
         String NameValue = Name.getText().toString().trim();
         String addressValue = address.getText().toString().trim();
+        String base64 = ImageUtil.Bitmap2Base64(bitmap_upload);
 
-        String url = UnicloudApi.Uploadfile(sp.getString("token",""),ImageUtil.byte2Base64(ImageUtil.bitmap2Byte(bitmap_upload)));
+        String url = UnicloudApi.Uploadfile(sp.getString("token",""),base64);
 
         if(url.isEmpty()){
             showToast("请上传图片");
@@ -252,7 +253,7 @@ public class Fragment_Me_lost_add  extends Activity implements View.OnClickListe
                 return;
             }else{
                 //上传意见反馈
-                if (Integer.parseInt(  UnicloudApi.Add_Lost("uni-data-collect",sp.getString("token",""),url,NameValue,sp.getString("id",""),addressValue)) > 0) {
+                if (Integer.parseInt(  UnicloudApi.Add_Lost("uni-data-lost",sp.getString("token",""),url,NameValue,sp.getString("id",""),addressValue)) > 0) {
                     showToast("提交成功!");
                     finish();
                 } else {
