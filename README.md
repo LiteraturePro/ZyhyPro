@@ -58,47 +58,10 @@
 
 ## 🔨安装过程
 #### 1、下载源码，使用Andriod Studio导入项目，等待编译完成
-> 插件比较臃肿，编译过程较慢，建议配置代理服务器，导入项目，实现正常运行对小白还是有一定难度的，耐心调试
-
-![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-4a2224fd-4003-4b8c-b165-abef8c34b228/72d6f92d-6e88-4351-b3eb-7b5a1b743557.png)
-
-#### 2、注册[Mob](https://www.mob.com/)服务,点击开发者平台
-![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-4a2224fd-4003-4b8c-b165-abef8c34b228/990a70fc-c3d8-4e41-9ca6-36eb24329813.png)
-
-#### 3、新建应用，然后点击`立即接入`，选择SMSSDK服务
-![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-4a2224fd-4003-4b8c-b165-abef8c34b228/6ea53e0c-1301-453e-a98d-cea39b7ce1e8.png)
-
-
-> 插句话，相信我，当我完成开发的时候，他还没有收费
-![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-4a2224fd-4003-4b8c-b165-abef8c34b228/8fcab680-2625-4578-96b3-6ca2dbe8f1b0.png)
-
-#### 4、在`:app`级下的build.gradle和InitSDK.java两个位置填入相应的值
-![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-4a2224fd-4003-4b8c-b165-abef8c34b228/5fe28004-1c3f-4072-ab0f-e2a894a2d6b6.png)
-![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-4a2224fd-4003-4b8c-b165-abef8c34b228/43e4885c-a500-4dda-8cf8-1f8eeae5c8e9.png)
-
-#### 5、注册[Bmob](https://bmob.cn/)服务,新建一个应用，在InitSDK.java和WelcomeActivity.java下填入相关值
-![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-4a2224fd-4003-4b8c-b165-abef8c34b228/18e31563-2d3c-454a-87f4-fb19e2391de9.png)
-![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-4a2224fd-4003-4b8c-b165-abef8c34b228/ed560e36-6a75-4089-a29f-9082eb927685.png)
-
-#### 6、在bmob控制台导入DATA文件夹下的数据表，在`数据`里面点击`添加表`，表名跟文件名同名，新建后选中该表，点击`更多`，选择`导入数据`，选择刚才的同名文件即可导入
-> 不要改表的名字，避免调试的时候没有数据（可以改，代码里面也要改）
-> 数据内容的版权归官方所有，这里只做测试，不可做商业用途。
-
-![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-4a2224fd-4003-4b8c-b165-abef8c34b228/0c2d215d-d887-440f-b056-6a20bf0ad984.png)
-
-#### 7、注册[Doge](https://www.dogecloud.com/?iuid=1670)服务，然后上传你自己的视频，在用户中心获得你的用户ID，在视频列表页获得你的Vcode,填入相应位置
-![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-4a2224fd-4003-4b8c-b165-abef8c34b228/00dbe3a6-acc7-4010-83df-935bd822860f.png)
-![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-4a2224fd-4003-4b8c-b165-abef8c34b228/691ef519-2da8-40a3-b365-d8ad7d5a5a9e.png)
-
 
 编译调试程序，以上步骤没问题，便可正常运行
 
 如有问题，请提issues
-
-
-## 💰关于广告
-
-目前的版本没有加入广告
 
 
 ## License
@@ -113,7 +76,7 @@
 
 - [Android Studio](https://developer.android.google.cn/docs)
 - [Mob开发文档](https://mob.com/wiki/list)
-- [Bmob开发文档](http://doc.bmob.cn/)
+- [vk-unicloud-admin开发文档](https://vkdoc.fsq.pub/admin/1/quickstart.html)
 - [Doge云开发文档](https://docs.dogecloud.com/vcloud/sdk-player-android)
 
 ## 感谢以下开源组件
