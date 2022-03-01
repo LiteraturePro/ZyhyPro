@@ -100,10 +100,6 @@ MobSDK {
     MobApm {
 
     }
-    // SMS验证
-    SMSSDK {
-
-    }
     spEdition "fp" // 设定MobSDK为隐私协议适配版本
     MobPush {
 
