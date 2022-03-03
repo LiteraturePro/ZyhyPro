@@ -60,7 +60,7 @@ dependencies {
     implementation(name: 'dogeplayer-release-1.0.6', ext: 'aar')
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-
+    testImplementation 'junit:junit:4.+'
     implementation "io.reactivex.rxjava2:rxjava:2.2.19"
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'com.squareup.okhttp3:okhttp:4.8.1'
