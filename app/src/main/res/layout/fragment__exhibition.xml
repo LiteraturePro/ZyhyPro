@@ -34,7 +34,7 @@
                     android:layout_height="30dp"
                     android:layout_gravity="center"
                     android:layout_marginRight="20dp"
-                    app:srcCompat="@drawable/smssdk_search" />
+                    />
             </LinearLayout>
             <ScrollView
                 android:layout_width="fill_parent"

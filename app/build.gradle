@@ -104,5 +104,6 @@ MobSDK {
     MobPush {
 
     }
+    SMSSDK {}
 
 }
