@@ -5,6 +5,9 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  schedule: # 定时任务
+    - cron: "0 0 * * *" # 每天 0 点跑 => 东八区 8点
+
 
 jobs:
   build:
